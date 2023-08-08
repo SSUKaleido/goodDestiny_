@@ -59,6 +59,15 @@ public class MagicBookMove : MonoBehaviour
                 }
             }
         }
+        Debug.DrawRay(rigid.position, Vector3.right, new Color(0, 1, 0));
+        Debug.DrawRay(rigid.position, Vector3.left, new Color(0, 1, 0));
+        RaycastHit2D ray_right = Physics2D.Raycast(rigid.position, Vector3.right, 1, LayerMask.GetMask("Platform"));
+        RaycastHit2D ray_left = Physics2D.Raycast(rigid.position, Vector3.left, 1, LayerMask.GetMask("Platform"));
+
+        if (ray_right.collider != null || ray_left.collider != null)
+        {
+            StartCoroutine(Move());
+        }
     }
 
     IEnumerator Attack()
@@ -84,7 +93,7 @@ public class MagicBookMove : MonoBehaviour
         alp_rigid.velocity=(player.position - transform.position).normalized*8f;
         yield return new WaitForSeconds(0.833f);
 
-        // 공격 애니메이션이 끝난 후, 쿨타임 동안 대기합니다.
+        // 공격 애니메이션이 끝난 후, 쿨타임 동안 대기
         magic_circle.SetActive(false);
         isAttacking = false;
         StartCoroutine(Cooldown());
@@ -109,7 +118,19 @@ public class MagicBookMove : MonoBehaviour
         yield return new WaitForSeconds(ATTACK_COOL);
         isCoolDown = false;
     }
-
+    IEnumerator Move()
+    {
+        rigid.velocity = new Vector2(next_move, 1);
+        yield return new WaitForSeconds(1);
+        rigid.velocity = new Vector2(next_move, 0);
+    }
+    private void OnCollisionEnter2D(Collision2D collider)
+    {
+        if (collider.gameObject.CompareTag("Ground"))
+        {
+            next_move = -(next_move);
+        }
+    }
     void DecideMove()
     {
         next_move = Random.Range(-1, 2);
