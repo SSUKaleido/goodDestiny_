@@ -1,24 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
     public float maxSpeed;
+    public float speed;
     public float jumpPower;
+
+
+    bool isDoubleJump = false;
+    bool isGround = false;
+
+    float default_speed;
+    float dash_time;
+    public float dash_speed;
+    public float default_time;
+
+    bool isDash;
+
     Rigidbody2D rigid;
     SpriteRenderer spriteRenderer;
     Animator anim;
-    bool doubleJumpState = false;
-    bool isGround = false;
 
-    public float speed;
 
-    private float default_speed;
-    public float dash_speed;
-    public float default_time;
-    private float dash_time;
-    private bool isdash;
-
-    
     void Awake()
     {
         default_speed = speed;
@@ -57,15 +63,15 @@ public class PlayerMove : MonoBehaviour
         else
             isGround = false;
         if (isGround)
-            doubleJumpState = true;
+            isDoubleJump = true;
         if (isGround && Input.GetButton("Jump"))
         {
             JumpAddForce();
         }
-        else if (doubleJumpState && Input.GetButtonDown("Jump"))
+        else if (isDoubleJump && Input.GetButtonDown("Jump"))
         {
             JumpAddForce();
-            doubleJumpState = false;
+            isDoubleJump = false;
         }
         }
     void JumpAddForce()
@@ -81,12 +87,12 @@ public class PlayerMove : MonoBehaviour
         rigid.velocity = new Vector2(h * default_speed, rigid.velocity.y);
         if (Input.GetKeyDown(KeyCode.X))
         {
-            isdash = true;
+            isDash = true;
         }
         if (dash_time <= 0)
         {
             rigid.velocity = new Vector2(h * speed, rigid.velocity.y);
-            if (isdash)
+            if (isDash)
             {
                 dash_time = default_time;
             }
@@ -96,7 +102,7 @@ public class PlayerMove : MonoBehaviour
             dash_time -= Time.deltaTime;
             rigid.velocity = new Vector2(h * dash_speed, rigid.velocity.y);
         }
-        isdash = false;
+        isDash = false;
 
     }
 
