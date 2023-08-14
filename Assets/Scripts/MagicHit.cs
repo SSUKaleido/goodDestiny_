@@ -9,23 +9,17 @@ public class MagicHit : MonoBehaviour
     {
         if (other.gameObject.tag=="Player")
         {
-            /*플레이어에게 데미지
-            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(damageAmount);
-            }
-            */
+            GameManager.Instance.TakeDamage(HIT_DAMAGE);
             Destroy(gameObject);
         }
-        else if (other.gameObject.tag == "TileMap")
+        else if (other.gameObject.tag == "Ground")
         {
             StartCoroutine(DestroyBullet());
         }
     }
     IEnumerator DestroyBullet()
     {
-        yield return new WaitForSeconds(1);
+        yield return null;
         Destroy(gameObject);
     }
 }

@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-public class PhysicBookMove : MonoBehaviour
+using static Unity.VisualScripting.Metadata;
+
+public class PhysicBookMoves : MonoBehaviour
 {
-    Animator anim;
+    Animator book_anim;
     Rigidbody2D rigid;
 
     public int next_move;
@@ -13,18 +16,11 @@ public class PhysicBookMove : MonoBehaviour
 
     bool isAttacking;
     bool isCoolDown;
-
-    GameObject effect;
-    Animator anim_effect;
     public Transform player;
-
-
     void Awake()
     {
-        anim = GetComponent<Animator>();
+        book_anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody2D>();
-        effect = transform.GetChild(0).gameObject;
-        anim_effect = GetComponentInChildren<Animator>();
         Invoke("DecideMove", 1);
     }
 
@@ -36,88 +32,92 @@ public class PhysicBookMove : MonoBehaviour
         {
             if (!isAttacking && !isCoolDown)
             {
-                anim.SetBool("IsPlayerClosed", true);
+                book_anim.SetBool("IsPlayerClosed", true);
                 StartCoroutine(Attack());
             }
             else if (isCoolDown)
             {
-                anim.SetBool("IsPlayerInRange", false);
+                book_anim.SetBool("IsPlayerInRange", false);
             }
             else if (!isAttacking)
             {
-                anim.SetBool("IsPlayerInRange", false);
+                book_anim.SetBool("IsPlayerInRange", false);
                 if (player.position.x > transform.position.x)
                 {
                     next_move = 1;
-                    transform.localScale = new Vector3(0.5f, 0.5f, 1);
                 }
                 else
                 {
                     next_move = -1;
-                    transform.localScale = new Vector3(-0.5f, 0.5f, 1);
                 }
             }
         }
+        else 
+        {
+            book_anim.SetBool("IsPlayerInRange", false);
+            if (player.position.x > transform.position.x)
+            {
+                next_move = 1;
+            }
+            else
+            {
+                next_move = -1;
+            }
+        }
+        Debug.DrawRay(rigid.position, Vector3.right, new Color(0, 1, 0));
+        Debug.DrawRay(rigid.position, Vector3.left, new Color(0, 1, 0));
+        RaycastHit2D ray_right = Physics2D.Raycast(rigid.position, Vector3.right, 1, LayerMask.GetMask("Platform"));
+        RaycastHit2D ray_left = Physics2D.Raycast(rigid.position, Vector3.left, 1, LayerMask.GetMask("Platform"));
+        if (ray_right.collider != null || ray_left.collider != null)
+        {
+            StartCoroutine(YMove());
+        }
     }
-
     IEnumerator Attack()
     {
         CancelInvoke("DecideMove");
         next_move = 0;
         isAttacking = true;
-        anim.SetBool("IsPlayerInRange", true);
+        book_anim.SetBool("IsPlayerInRange", true);
         if (player.position.x < transform.position.x)
         {
-            transform.localScale = new Vector3(-0.5f, 0.5f, 1);
-            anim.SetTrigger("Left");
+            book_anim.SetTrigger("Left");
         }
         else
         {
-            transform.localScale = new Vector3(0.5f, 0.5f, 1);
-            anim.SetTrigger("Right");
+            book_anim.SetTrigger("Right");
         }
-        yield return new WaitForSeconds(0.2f);
-        yield return new WaitForSeconds(0.2f);
-        yield return new WaitForSeconds(0.2f);
-        effect.SetActive(true);
-        anim_effect.SetTrigger("IsBookAttack");
-        yield return new WaitForSeconds(0.2f);
-        yield return new WaitForSeconds(0.2f);
-        effect.SetActive(false);
-
-        // 공격 애니메이션이 끝난 후, 쿨타임 동안 대기합니다.
-        isAttacking = false;
+        
+        yield return new WaitForSeconds(1.2f);
         StartCoroutine(Cooldown());
     }
-
     IEnumerator Cooldown()
     {
         if (player.position.x > transform.position.x)
         {
             next_move = 1;
-            transform.localScale = new Vector3(0.5f, 0.5f, 1);
         }
         else
         {
             next_move = -1;
-            transform.localScale = new Vector3(-0.5f, 0.5f, 1);
         }
 
         isCoolDown = true;
-        anim.SetBool("IsPlayerInRange", false);
+        book_anim.SetBool("IsPlayerInRange", false);
 
         yield return new WaitForSeconds(ATTACK_COOL);
         isCoolDown = false;
     }
-
+    IEnumerator YMove()
+    {
+        rigid.velocity = new Vector2(next_move, 1);
+        yield return new WaitForSeconds(1);
+        rigid.velocity = new Vector2(next_move, 0);
+    }
     void DecideMove()
     {
         next_move = Random.Range(-1, 2);
-        if (next_move > 0)
-            transform.localScale = new Vector3(0.5f, 0.5f, 1);
-        else
-            transform.localScale = new Vector3(-0.5f, 0.5f, 1);
-        if (!anim.GetBool("IsPlayerClosed"))
+        if (!book_anim.GetBool("IsPlayerClosed"))
         {
             Invoke("DecideMove", 4);
         }

@@ -18,8 +18,7 @@ public class MagicBookMove : MonoBehaviour
     Animator anim_magic;
     public Transform player;
     public GameObject bullet;
-
-
+    
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -66,7 +65,7 @@ public class MagicBookMove : MonoBehaviour
 
         if (ray_right.collider != null || ray_left.collider != null)
         {
-            StartCoroutine(Move());
+            StartCoroutine(YMove());
         }
     }
 
@@ -88,7 +87,7 @@ public class MagicBookMove : MonoBehaviour
         anim_magic.SetTrigger("IsBookMagic");
 
         yield return new WaitForSeconds(0.5f);
-        GameObject alphabet = Instantiate(bullet,transform.position, transform.rotation);
+        GameObject alphabet = Instantiate(bullet,transform.position,transform.rotation);
         Rigidbody2D alp_rigid = alphabet.GetComponent<Rigidbody2D>();
         alp_rigid.velocity=(player.position - transform.position).normalized*8f;
         yield return new WaitForSeconds(0.833f);
@@ -118,19 +117,14 @@ public class MagicBookMove : MonoBehaviour
         yield return new WaitForSeconds(ATTACK_COOL);
         isCoolDown = false;
     }
-    IEnumerator Move()
+    IEnumerator YMove()
     {
-        rigid.velocity = new Vector2(next_move, 1);
+        next_move = -(next_move);
+        rigid.velocity = new Vector2(next_move, 2);
         yield return new WaitForSeconds(1);
         rigid.velocity = new Vector2(next_move, 0);
     }
-    private void OnCollisionEnter2D(Collision2D collider)
-    {
-        if (collider.gameObject.CompareTag("Ground"))
-        {
-            next_move = -(next_move);
-        }
-    }
+    
     void DecideMove()
     {
         next_move = Random.Range(-1, 2);

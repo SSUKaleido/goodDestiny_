@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HPText : MonoBehaviour
+public class HP : MonoBehaviour
 {
     GameManager gm;
     public Text ScriptTxt;
-    public int max_health;
-    public int cur_health;
+    public float max_health;
+    public float cur_health;
+    public Image health_bar;
     
     void Start()
     {
@@ -22,6 +23,7 @@ public class HPText : MonoBehaviour
         max_health = gm.max_health;
         cur_health = gm.cur_health;
         ScriptTxt.text = cur_health + "/" + max_health;
+        health_bar.fillAmount = cur_health / max_health;
     }
 
 }
