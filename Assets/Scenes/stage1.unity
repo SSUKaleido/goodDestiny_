@@ -203,7 +203,7 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.08, y: -0.04}
+  m_Offset: {x: 0, y: -0.04}
   m_Size: {x: 0.2, y: 0.38}
   m_Direction: 0
 --- !u!212 &3647163
@@ -270,8 +270,7 @@ Transform:
   m_LocalPosition: {x: -6.13, y: -2.66, z: 0}
   m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1333588604}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &3647167
@@ -309,11 +308,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 15
   jumpPower: 15
-  dashPower: 100
+  dashPower: 150
   dashDelaySec: 0.5
-  isJump: 0
-  isDoubleJump: 0
-  isDash: 0
+  weapons: []
+  hasWeapons: 
+  coin: 0
+  health: 100
+  score: 0
+  maxCoin: 10000
+  maxHealth: 100
+  equipWeapon: {fileID: 0}
 --- !u!1 &145593252
 GameObject:
   m_ObjectHideFlags: 0
@@ -5689,6 +5693,7 @@ GameObject:
   - component: {fileID: 1333588604}
   - component: {fileID: 1333588601}
   - component: {fileID: 1333588603}
+  - component: {fileID: 1333588605}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5764,12 +5769,26 @@ Transform:
   m_GameObject: {fileID: 1333588600}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.0216668, y: 0.44333336, z: -1.6666667}
-  m_LocalScale: {x: 0.16666667, y: 0.16666667, z: 0.16666667}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3647164}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1333588605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1333588600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82c61fc29deb8864bbdb7da7100187ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 3647164}
+  offset: {x: -0.5, y: 2, z: -1}
 --- !u!1 &1459944132
 GameObject:
   m_ObjectHideFlags: 0
@@ -6518,6 +6537,7 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1333588604}
   - {fileID: 1527408505}
   - {fileID: 2090410044}
   - {fileID: 1459944134}
