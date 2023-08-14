@@ -32,14 +32,11 @@ public class Player : MonoBehaviour
     bool isDoubleJump;
     bool isDash;
     bool isFireReady = true;
-    bool isBorder;
     bool isDead;
 
     Rigidbody2D rigid;
     SpriteRenderer spriteRenderer;
     Animator anim;
-
-
 
     public Weapon equipWeapon;
     float fireDelay;
@@ -51,7 +48,7 @@ public class Player : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-        hasWeapons[0] = true;
+        //hasWeapons[0] = true;
     }
 
     void Update()
@@ -60,8 +57,8 @@ public class Player : MonoBehaviour
         Move();
         Jump();
         Dash();
-        Attack();
-        Swap();
+        //Attack();
+        //Swap();
     }
 
     void GetInput()
@@ -79,8 +76,7 @@ public class Player : MonoBehaviour
     void Move()
     {
         //Move Speed
-        if(!isBorder)
-            rigid.velocity = new Vector2(hAxis * speed, rigid.velocity.y);
+        rigid.velocity = new Vector2(hAxis * speed, rigid.velocity.y);
 
         anim.SetBool("isWalking", hDown);
 
@@ -161,15 +157,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    void StopToWall()
-    {
-        Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
-        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
-    }
-
     void FixedUpdate()
     {
-        StopToWall();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
