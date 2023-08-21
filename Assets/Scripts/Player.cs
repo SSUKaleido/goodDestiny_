@@ -31,15 +31,20 @@ public class Player : MonoBehaviour
     bool isJump;
     bool isDoubleJump;
     bool isDash;
-    bool isFireReady = true;
+    //bool isFireReady = true;
     bool isDead;
 
     Rigidbody2D rigid;
     SpriteRenderer spriteRenderer;
     Animator anim;
 
-    public Weapon equipWeapon;
-    float fireDelay;
+    float curTime;
+    public float coolTime = 0.5f;
+    public Transform pos;
+    public Vector2 boxSize;
+
+    //public Weapon equipWeapon;
+    //float fireDelay;
 
 
     void Awake()
@@ -57,7 +62,7 @@ public class Player : MonoBehaviour
         Move();
         Jump();
         Dash();
-        //Attack();
+        Attack();
         //Swap();
     }
 
@@ -66,8 +71,8 @@ public class Player : MonoBehaviour
         hAxis = Input.GetAxisRaw("Horizontal");
         hDown = Input.GetButton("Horizontal");
         jDown = Input.GetButtonDown("Jump");
-        aDown = Input.GetKeyDown(KeyCode.A);
-        dDown = Input.GetKeyDown(KeyCode.D);
+        aDown = Input.GetKeyDown(KeyCode.Z);
+        dDown = Input.GetKeyDown(KeyCode.C);
         sDown1 = Input.GetKeyDown(KeyCode.Alpha1);
         sDown1 = Input.GetKeyDown(KeyCode.Alpha2);
 
@@ -123,18 +128,47 @@ public class Player : MonoBehaviour
 
     void Attack()
     {
-        if (equipWeapon == null || isDead)
-            return;
-
-        fireDelay += Time.deltaTime;
-        isFireReady = equipWeapon.rate < fireDelay;
-
-        if (dDown && isFireReady)
+        if(curTime <= 0)
         {
-            equipWeapon.Use(); //조건 충족후 무기속함수 실행
-            anim.SetTrigger(equipWeapon.type == Weapon.Type.Sword ? "doSwing" : "doShot");
-            fireDelay = 0;
+            if(dDown)
+            {
+                Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+                foreach (Collider2D collider in collider2Ds)
+                {
+                    Debug.Log(collider.tag);
+                }
+
+                anim.SetTrigger("atk");
+                curTime = coolTime;
+            }
         }
+        else
+        {
+            curTime -= Time.deltaTime;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(pos.position, boxSize);
+    }
+
+    //아래는 에셋이 아닌 뼈대를 가진 플레이어일 때 가능.
+    /*void Attack()
+    {
+            if (equipWeapon == null || isDead)
+                return;
+
+            fireDelay += Time.deltaTime;
+            isFireReady = equipWeapon.rate < fireDelay;
+
+            if (dDown && isFireReady)
+            {
+                equipWeapon.Use(); //조건 충족후 무기속함수 실행
+                anim.SetTrigger(equipWeapon.type == Weapon.Type.Sword ? "doSwing" : "doShot");
+                fireDelay = 0;
+            }
     }
 
     void Swap()
@@ -155,7 +189,7 @@ public class Player : MonoBehaviour
 
             anim.SetTrigger("doSwap");
         }
-    }
+    }*/
 
     void FixedUpdate()
     {
