@@ -16,7 +16,7 @@ public class MoneyText : MonoBehaviour
     }
     void Update()
     {
-        player_money = gm.player_money;
+        player_money = gm.totalMoney;
         ScriptTxt.text = "" + player_money;
     }
 }

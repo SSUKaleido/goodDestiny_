@@ -9,20 +9,26 @@ public class GameManager : MonoBehaviour
 {
     public int stage_count;
     public int chapter_count;
+    public int max_health;
+    public int cur_health;
+    public int roundMoney;
+    public int totalMoney;
 
-    public float max_health;
-    public float cur_health;
-    public int player_money;
+    public bool isGameOver;
+    public bool isPause;
+    public bool isText;
 
-    public bool is_gameover;
-    public bool is_pause;
+    public GameObject player;
     public FadeEffect fe;
+
     public GameObject gameoverUI;
-    public GameObject Menuset;
+    public GameObject menuSet;
+
     public GameObject[] chapter1;
     public GameObject[] chapter2;
     public GameObject[] chapter3;
-    public GameObject[] boss_stage;
+    public GameObject[] bossStage;
+
     private static GameManager instance;
     public static GameManager Instance
     {
@@ -42,52 +48,51 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
     }
-        void Start()
+    void Start()
     {
         max_health = 100;
         cur_health = 100;
-        player_money = 0;
-        chapter_count = 1;
-        stage_count = 0;
+        player = GameObject.FindWithTag("Player");
     }
 
     void Update()
     {
-        
-        if (Input.GetButtonDown("Vertical"))
-            StartCoroutine(NextStage());
-        
+        MenuSet();
+    }
+    void MenuSet()
+    {
         if (Input.GetButtonDown("Cancel"))
         {
-            if (Menuset.activeSelf)
+            if (menuSet.activeSelf)
             {
-                is_pause = false;
+                isPause = false;
                 Time.timeScale = 1;
-                Menuset.SetActive(false);
+                menuSet.SetActive(false);
             }
             else
             {
-                is_pause = true;
+                isPause = true;
                 Time.timeScale = 0;
-                Menuset.SetActive(true);
+                menuSet.SetActive(true);
             }
         }
-        if (is_pause==false)
+        if (isPause == false)
         {
             Time.timeScale = 1;
         }
-
     }
     public void ChangePause()
     {
-        is_pause = false;
+        isPause = false;
     }
-    IEnumerator NextStage()
+    public IEnumerator NextStage()
     {
         yield return StartCoroutine(fe.InGradation());
-        switch (chapter_count) {
-            case 1:
-                if (stage_count != 3) //ÀÏ¹Ý ¸Ê À¯Áö
+        player.transform.position = new Vector3(-6, -2, 0);
+        switch (chapter_count)
+        {
+            case 0:
+                if (stage_count < 2) //ÀÏ¹Ý ¸Ê À¯Áö
                 {
                     chapter1[stage_count++].SetActive(false);
                     chapter1[stage_count].SetActive(true);
@@ -96,11 +101,11 @@ public class GameManager : MonoBehaviour
                 {
                     chapter1[stage_count].SetActive(false);
                     stage_count = 0;
-                    boss_stage[chapter_count++].SetActive(true);
+                    bossStage[chapter_count++].SetActive(true);
                 }
                 break;
-            case 2:
-                if (stage_count != 3) //ÀÏ¹Ý ¸Ê À¯Áö
+            case 1:
+                if (stage_count < 2) //ÀÏ¹Ý ¸Ê À¯Áö
                 {
                     chapter2[stage_count++].SetActive(false);
                     chapter2[stage_count].SetActive(true);
@@ -109,11 +114,11 @@ public class GameManager : MonoBehaviour
                 {
                     chapter2[stage_count].SetActive(false);
                     stage_count = 0;
-                    boss_stage[chapter_count++].SetActive(true);
+                    bossStage[chapter_count++].SetActive(true);
                 }
                 break;
-            case 3:
-                if (stage_count != 3) //ÀÏ¹Ý ¸Ê À¯Áö
+            case 2:
+                if (stage_count < 2) //ÀÏ¹Ý ¸Ê À¯Áö
                 {
                     chapter3[stage_count++].SetActive(false);
                     chapter3[stage_count].SetActive(true);
@@ -122,14 +127,14 @@ public class GameManager : MonoBehaviour
                 {
                     chapter3[stage_count].SetActive(false);
                     stage_count = 0;
-                    boss_stage[chapter_count++].SetActive(true);
+                    bossStage[chapter_count++].SetActive(true);
                 }
                 break;
         }
         yield return StartCoroutine(fe.OutGradation());
     }
     public void NextScene()
-    {/*
+    {
         switch (chapter_count)
         {
             case 1:
@@ -142,7 +147,10 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene("Chapter3");
                 break;
         }
-        */
+    }
+    public void GoMain()
+    {
+        SceneManager.LoadScene("Main");
     }
     public void TakeDamage(int damage)
     {
@@ -151,11 +159,14 @@ public class GameManager : MonoBehaviour
             cur_health -= damage;
         }
         else
-            PlayerDead();
+            StartCoroutine(PlayerDead());
     }
-    public void PlayerDead()
+    IEnumerator PlayerDead()
     {
-        is_gameover = true;
+        isGameOver = true;
+        yield return new WaitForSeconds(2);
+        Time.timeScale = 0;
         gameoverUI.SetActive(true);
     }
 }
+    

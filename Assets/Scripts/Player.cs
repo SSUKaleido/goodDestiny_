@@ -62,14 +62,14 @@ public class Player : MonoBehaviour
     }
 
     void GetInput()
-    {
-        hAxis = Input.GetAxisRaw("Horizontal");
-        hDown = Input.GetButton("Horizontal");
-        jDown = Input.GetButtonDown("Jump");
-        aDown = Input.GetKeyDown(KeyCode.A);
-        dDown = Input.GetKeyDown(KeyCode.D);
-        sDown1 = Input.GetKeyDown(KeyCode.Alpha1);
-        sDown1 = Input.GetKeyDown(KeyCode.Alpha2);
+    { //대화 실행 중 이동 불가 설정
+        hAxis = GameManager.Instance.isText ? 0 : Input.GetAxisRaw("Horizontal");
+        hDown = GameManager.Instance.isText ? false : Input.GetButton("Horizontal");
+        jDown = GameManager.Instance.isText ? false : Input.GetButtonDown("Jump");
+        aDown = GameManager.Instance.isText ? false : Input.GetKeyDown(KeyCode.A);
+        dDown = GameManager.Instance.isText ? false : Input.GetKeyDown(KeyCode.D);
+        sDown1 = GameManager.Instance.isText ? false : Input.GetKeyDown(KeyCode.Alpha1);
+        sDown1 = GameManager.Instance.isText ? false : Input.GetKeyDown(KeyCode.Alpha2);
 
     }
 

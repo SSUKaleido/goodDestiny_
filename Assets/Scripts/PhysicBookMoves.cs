@@ -16,6 +16,7 @@ public class PhysicBookMoves : MonoBehaviour
 
     bool isAttacking;
     bool isCoolDown;
+    
     public Transform player;
     void Awake()
     {
@@ -32,16 +33,13 @@ public class PhysicBookMoves : MonoBehaviour
         {
             if (!isAttacking && !isCoolDown)
             {
-                book_anim.SetBool("IsPlayerClosed", true);
                 StartCoroutine(Attack());
             }
             else if (isCoolDown)
             {
-                book_anim.SetBool("IsPlayerInRange", false);
             }
             else if (!isAttacking)
             {
-                book_anim.SetBool("IsPlayerInRange", false);
                 if (player.position.x > transform.position.x)
                 {
                     next_move = 1;
@@ -54,7 +52,6 @@ public class PhysicBookMoves : MonoBehaviour
         }
         else 
         {
-            book_anim.SetBool("IsPlayerInRange", false);
             if (player.position.x > transform.position.x)
             {
                 next_move = 1;
@@ -64,6 +61,10 @@ public class PhysicBookMoves : MonoBehaviour
                 next_move = -1;
             }
         }
+        RayUse();
+    }
+    void RayUse()
+    {
         Debug.DrawRay(rigid.position, Vector3.right, new Color(0, 1, 0));
         Debug.DrawRay(rigid.position, Vector3.left, new Color(0, 1, 0));
         RaycastHit2D ray_right = Physics2D.Raycast(rigid.position, Vector3.right, 1, LayerMask.GetMask("Platform"));
@@ -78,16 +79,6 @@ public class PhysicBookMoves : MonoBehaviour
         CancelInvoke("DecideMove");
         next_move = 0;
         isAttacking = true;
-        book_anim.SetBool("IsPlayerInRange", true);
-        if (player.position.x < transform.position.x)
-        {
-            book_anim.SetTrigger("Left");
-        }
-        else
-        {
-            book_anim.SetTrigger("Right");
-        }
-        
         yield return new WaitForSeconds(1.2f);
         StartCoroutine(Cooldown());
     }
@@ -103,7 +94,6 @@ public class PhysicBookMoves : MonoBehaviour
         }
 
         isCoolDown = true;
-        book_anim.SetBool("IsPlayerInRange", false);
 
         yield return new WaitForSeconds(ATTACK_COOL);
         isCoolDown = false;
