@@ -110,15 +110,16 @@ public class PhysicBookHit : MonoBehaviour
         yield return new WaitForSeconds(ATTACK_COOL);
         isCoolDown = false;
     }
+
+    public void OnDamage(int damage)
+    {
+        cur_health -= damage;
+        StartCoroutine(OnDamage());
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Weapon")
-        {
-            Weapon weapon = collision.GetComponent<Weapon>();
-            cur_health -= weapon.damage;
-            StartCoroutine(OnDamage());
-        }
-        else if (collision.tag=="Player")
+        if (collision.tag=="Player")
             GameManager.Instance.TakeDamage(HIT_DAMAGE);
     }
     IEnumerator OnDamage()

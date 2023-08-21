@@ -9,8 +9,9 @@ public class Player : MonoBehaviour
     public float jumpPower = 15;
     public float dashPower = 150;
     public float dashDelaySec = 0.5f;
-    public GameObject[] weapons;
-    public bool[] hasWeapons;
+    //public GameObject[] weapons;
+    //public bool[] hasWeapons;
+    public int swordDamage = 10;
 
     public int coin;
     public int health = 100;
@@ -68,13 +69,13 @@ public class Player : MonoBehaviour
 
     void GetInput()
     { //대화 실행 중 이동 불가 설정
-        hAxis = GameManager.Instance.isText ? 0 : Input.GetAxisRaw("Horizontal");
-        hDown = GameManager.Instance.isText ? false : Input.GetButton("Horizontal");
-        jDown = GameManager.Instance.isText ? false : Input.GetButtonDown("Jump");
-        aDown = GameManager.Instance.isText ? false : Input.GetKeyDown(KeyCode.A);
-        dDown = GameManager.Instance.isText ? false : Input.GetKeyDown(KeyCode.D);
-        sDown1 = GameManager.Instance.isText ? false : Input.GetKeyDown(KeyCode.Alpha1);
-        sDown1 = GameManager.Instance.isText ? false : Input.GetKeyDown(KeyCode.Alpha2);
+        hAxis = Input.GetAxisRaw("Horizontal");
+        hDown = Input.GetButton("Horizontal");
+        jDown = Input.GetButtonDown("Jump");
+        aDown = Input.GetKeyDown(KeyCode.Z);
+        dDown = Input.GetKeyDown(KeyCode.C);
+        sDown1 = Input.GetKeyDown(KeyCode.Alpha1);
+        sDown1 = Input.GetKeyDown(KeyCode.Alpha2);
 
     }
 
@@ -135,7 +136,10 @@ public class Player : MonoBehaviour
                 Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
                 foreach (Collider2D collider in collider2Ds)
                 {
-                    Debug.Log(collider.tag);
+                    if(collider.tag == "Enemy")
+                    {
+                        collider.GetComponent<PhysicBookHit>().OnDamage(swordDamage);
+                    }
                 }
 
                 anim.SetTrigger("atk");
