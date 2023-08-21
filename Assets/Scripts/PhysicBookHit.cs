@@ -10,11 +10,15 @@ public class PhysicBookHit : MonoBehaviour
     float ATTACK_RANGE = 2f;
     float ATTACK_COOL = 2f;
     float distance;
-    public int HIT_DAMAGE = 15;
+    public int HIT_DAMAGE;
+    public int max_health;
+    public int cur_health;
 
     bool isAttacking;
     bool isCoolDown;
 
+    public FinishControl fc;
+    SpriteRenderer spriteRenderer;
     GameObject effect;
     Animator anim_effect;
     public Transform player;
@@ -26,6 +30,7 @@ public class PhysicBookHit : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         effect = transform.GetChild(0).gameObject;
         anim_effect = GetComponentInChildren<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         Invoke("DecideMove", 1);
     }
 
@@ -105,8 +110,35 @@ public class PhysicBookHit : MonoBehaviour
         yield return new WaitForSeconds(ATTACK_COOL);
         isCoolDown = false;
     }
-    private void OnTriggerEnter2D(Collider2D collider)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        GameManager.Instance.TakeDamage(HIT_DAMAGE);
+        if (collision.tag == "Weapon")
+        {
+            Weapon weapon = collision.GetComponent<Weapon>();
+            cur_health -= weapon.damage;
+            StartCoroutine(OnDamage());
+        }
+        else if (collision.tag=="Player")
+            GameManager.Instance.TakeDamage(HIT_DAMAGE);
+    }
+    IEnumerator OnDamage()
+    {
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        if (cur_health > 0)
+        {
+            spriteRenderer.color = Color.white;
+        }
+        else
+        {
+            spriteRenderer.color = Color.gray;
+            Die();
+        }
+    }
+    void Die()
+    {
+        Destroy(gameObject);
+        GameManager.Instance.roundMoney += 100;
+        fc.MonsterDied();
     }
 }

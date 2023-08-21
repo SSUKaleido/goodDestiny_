@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class MagicBookMove : MonoBehaviour
+public class MagicBook : MonoBehaviour
 {
     Animator anim;
     Rigidbody2D rigid;
 
+    public int max_health;
+    public int cur_health;
     public int next_move;
     float ATTACK_RANGE = 9f;
     float ATTACK_COOL = 4f;
@@ -14,6 +16,9 @@ public class MagicBookMove : MonoBehaviour
     bool isAttacking;
     bool isCoolDown;
 
+    public FinishControl fc;
+
+    SpriteRenderer spriteRenderer;
     GameObject magic_circle;
     Animator anim_magic;
     public Transform player;
@@ -25,6 +30,7 @@ public class MagicBookMove : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         magic_circle = transform.GetChild(0).gameObject;
         anim_magic = GetComponentInChildren<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         Invoke("DecideMove", 1);
     }
 
@@ -58,6 +64,10 @@ public class MagicBookMove : MonoBehaviour
                 }
             }
         }
+        RayUse();
+    }
+    void RayUse()
+    {
         Debug.DrawRay(rigid.position, Vector3.right, new Color(0, 1, 0));
         Debug.DrawRay(rigid.position, Vector3.left, new Color(0, 1, 0));
         RaycastHit2D ray_right = Physics2D.Raycast(rigid.position, Vector3.right, 1, LayerMask.GetMask("Platform"));
@@ -66,6 +76,29 @@ public class MagicBookMove : MonoBehaviour
         if (ray_right.collider != null || ray_left.collider != null)
         {
             StartCoroutine(YMove());
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            Weapon weapon = collision.GetComponent<Weapon>();
+            cur_health -= weapon.damage;
+            StartCoroutine(OnDamage());
+        }
+    }
+    IEnumerator OnDamage()
+    {
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        if (cur_health > 0)
+        {
+            spriteRenderer.color = Color.white;
+        }
+        else
+        {
+            spriteRenderer.color = Color.gray;
+            Die();
         }
     }
 
@@ -136,5 +169,12 @@ public class MagicBookMove : MonoBehaviour
         {
             Invoke("DecideMove", 4);
         }
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
+        GameManager.Instance.roundMoney += 100;
+        fc.MonsterDied();
     }
 }
