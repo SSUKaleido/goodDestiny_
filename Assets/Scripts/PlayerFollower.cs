@@ -9,6 +9,6 @@ public class PlayerFollower : MonoBehaviour
 
     void Update()
     {
-        transform.position = target.position + offset;
+        transform.position = target.position+offset;
     }
 }

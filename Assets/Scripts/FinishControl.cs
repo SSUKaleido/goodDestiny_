@@ -27,6 +27,7 @@ public class FinishControl : MonoBehaviour
     public void MonsterDied()
     {
         remainMonster--;
+        ReviewManager.Instance.enemyKill++;
         if (remainMonster <= 0)
             OpenPortal();
     }

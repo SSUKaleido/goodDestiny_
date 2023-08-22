@@ -13,10 +13,11 @@ public class GameManager : MonoBehaviour
     public int cur_health;
     public int roundMoney;
     public int totalMoney;
+    public float stopWatch;
 
-    public bool isGameOver;
-    public bool isPause;
-    public bool isText;
+    public bool isGameOver=false;
+    public bool isPause=false;
+    public bool isText=false;
 
     public GameObject player;
     public FadeEffect fe;
@@ -58,6 +59,8 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         MenuSet();
+        if (!isGameOver)
+            stopWatch += Time.deltaTime;
     }
     void MenuSet()
     {
@@ -167,6 +170,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         Time.timeScale = 0;
         gameoverUI.SetActive(true);
+        totalMoney += roundMoney;
     }
 }
     
