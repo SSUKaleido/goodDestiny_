@@ -7,6 +7,7 @@ using UnityEngine.XR;
 
 public class Player : MonoBehaviour
 {
+<<<<<<< Updated upstream
     public GameManager manager;
     public Camera followCamera;
 
@@ -15,6 +16,18 @@ public class Player : MonoBehaviour
     float defaultSpeed;
     public float dashDelaySec = 1.5f;
     public float jumpPower = 15;
+=======
+    #region Singleton
+    public static Player instance;
+    #endregion
+    public float speed = 15;
+    public float jumpPower = 15;
+    public float dashPower = 150;
+    public float dashDelaySec = 0.5f;
+    //public GameObject[] weapons;
+    //public bool[] hasWeapons;
+    public float swordDamage = 10;
+>>>>>>> Stashed changes
 
     public int coin;
     public int health = 100;
@@ -56,6 +69,7 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
+        instance = this;
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         mesh = GetComponent<MeshRenderer>();

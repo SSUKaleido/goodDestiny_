@@ -40,7 +40,8 @@ public class ReviewManager : MonoBehaviour
     }
     void DeathUI()
     {
-        text.text = ((int)Mathf.Round(GameManager.Instance.stopWatch)) / 60 + ":" + ((int)Mathf.Round(GameManager.Instance.stopWatch)) % 60 + "\n"
+        text.text = ((int)Mathf.Round(GameManager.Instance.stopWatch)) / 60 + ":" + 
+                ((int)Mathf.Round(GameManager.Instance.stopWatch)) % 60 + "\n"
                    + enemyKill + "\n" + GameManager.Instance.roundMoney;
     }
 }

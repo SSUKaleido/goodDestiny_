@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public FadeEffect fe;
 
     public GameObject gameoverUI;
-    public GameObject menuSet;
+    public GameObject pauseUI;
 
     public GameObject[] chapter1;
     public GameObject[] chapter2;
@@ -66,17 +66,17 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Cancel"))
         {
-            if (menuSet.activeSelf)
+            if (pauseUI.activeSelf)
             {
                 isPause = false;
                 Time.timeScale = 1;
-                menuSet.SetActive(false);
+                pauseUI.SetActive(false);
             }
             else
             {
                 isPause = true;
                 Time.timeScale = 0;
-                menuSet.SetActive(true);
+                pauseUI.SetActive(true);
             }
         }
         if (isPause == false)
