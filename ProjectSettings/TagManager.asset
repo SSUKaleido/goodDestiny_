@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Enemy
+  - Weapon
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX
@@ -12,7 +15,7 @@ TagManager:
   - Platform
   - Water
   - UI
-  - Monster
+  - Enemy
   - Player
   - 
   - 

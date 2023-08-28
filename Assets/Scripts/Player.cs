@@ -2,16 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
+using UnityEngine.XR;
 
 public class Player : MonoBehaviour
 {
-    public float speed = 15;
+    public GameManager manager;
+    public Camera followCamera;
+
+    public float speed = 8;
+    public float dashSpeed = 30;
+    float defaultSpeed;
+    public float dashDelaySec = 1.5f;
     public float jumpPower = 15;
-    public float dashPower = 150;
-    public float dashDelaySec = 0.5f;
-    //public GameObject[] weapons;
-    //public bool[] hasWeapons;
-    public int swordDamage = 10;
 
     public int coin;
     public int health = 100;
@@ -24,47 +27,55 @@ public class Player : MonoBehaviour
 
     bool hDown;
     bool jDown;
-    bool aDown;
-    bool dDown;
-    bool sDown1;
-    bool sDown2;
+    bool zDown;
+    bool xDown;
+    bool cDown;
 
     bool isJump;
     bool isDoubleJump;
     bool isDash;
-    //bool isFireReady = true;
+    bool isDamage;
     bool isDead;
 
     Rigidbody2D rigid;
-    SpriteRenderer spriteRenderer;
     Animator anim;
+    MeshRenderer mesh;
 
-    float curTime;
-    public float coolTime = 0.5f;
-    public Transform pos;
+    public int swordDamage = 10;
+    public int atkNum = 0;
+    float swordCurTime;
+    public float swordCoolTime = 0.3f;
+    public Transform swordRange;
     public Vector2 boxSize;
 
-    //public Weapon equipWeapon;
-    //float fireDelay;
+    float bulletCurTime;
+    public float bulletCoolTime = 2f;
+    public GameObject bullet;
+    public Transform bulletPos;
 
 
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        mesh = GetComponent<MeshRenderer>();
 
+        defaultSpeed = speed;
         //hasWeapons[0] = true;
     }
 
     void Update()
     {
         GetInput();
-        Move();
         Jump();
         Dash();
         Attack();
-        //Swap();
+        BulletFire();
+    }
+
+    void FixedUpdate()
+    {
+        Move();
     }
 
     void GetInput()
@@ -72,17 +83,15 @@ public class Player : MonoBehaviour
         hAxis = Input.GetAxisRaw("Horizontal");
         hDown = Input.GetButton("Horizontal");
         jDown = Input.GetButtonDown("Jump");
-        aDown = Input.GetKeyDown(KeyCode.Z);
-        dDown = Input.GetKeyDown(KeyCode.C);
-        sDown1 = Input.GetKeyDown(KeyCode.Alpha1);
-        sDown1 = Input.GetKeyDown(KeyCode.Alpha2);
-
+        zDown = Input.GetKeyDown(KeyCode.Z);
+        xDown = Input.GetKeyDown(KeyCode.X);
+        cDown = Input.GetKeyDown(KeyCode.C);
     }
 
     void Move()
     {
         //Move Speed
-        rigid.velocity = new Vector2(hAxis * speed, rigid.velocity.y);
+        rigid.velocity = new Vector2(hAxis * defaultSpeed, rigid.velocity.y);
 
         anim.SetBool("isWalking", hDown);
 
@@ -93,8 +102,10 @@ public class Player : MonoBehaviour
         }
 
         //Direction Sprite(방향 전환)
-        if (Input.GetButton("Horizontal"))
-            spriteRenderer.flipX = Input.GetAxisRaw("Horizontal") == -1;
+        if (hAxis == -1)
+            transform.rotation = Quaternion.Euler(0,180,0);
+        else if(hAxis == 1)
+            transform.rotation = Quaternion.Euler(0,0,0);
     }
 
     void Jump()
@@ -113,13 +124,24 @@ public class Player : MonoBehaviour
 
     void Dash()
     {
-        if(aDown && hDown && !isDash){
+        if (zDown && hDown && !isDash)
+        {
             isDash = true;
-            rigid.velocity = new Vector2(hAxis * dashPower, rigid.velocity.y);
-            
-            if(!isJump)
-               Invoke("DashDelay", dashDelaySec);
+            Vector2 vec = new Vector2(rigid.velocity.x, 0);
+            rigid.AddForce(vec, ForceMode2D.Impulse);
+            anim.SetBool("isDashing", true);
+            defaultSpeed = dashSpeed;
+            Invoke("DashExit", 0.15f);
+
+            if (!isJump)
+                Invoke("DashDelay", dashDelaySec);
         }
+    }
+
+    void DashExit()
+    {
+        defaultSpeed = speed;
+        anim.SetBool("isDashing", false);
     }
 
     void DashDelay()
@@ -127,76 +149,56 @@ public class Player : MonoBehaviour
          isDash = false;
     }
 
+    void BulletFire()
+    {
+        if(bulletCurTime <= 0)
+        {
+            if(xDown)
+            {
+                Instantiate(bullet, bulletPos.position, transform.rotation);
+                bulletCurTime = bulletCoolTime;
+            }
+        }
+        bulletCurTime -= Time.deltaTime;
+    }    
+
     void Attack()
     {
-        if(curTime <= 0)
-        {
-            if(dDown)
+        if(swordCurTime <= 0)
+        { 
+            if(cDown)
             {
-                Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+                Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(swordRange.position, boxSize, 0);
+                
+                PlayAtkAnimation(atkNum++);
+                if (atkNum > 1)
+                    atkNum = 0;
+
                 foreach (Collider2D collider in collider2Ds)
                 {
-                    if(collider.tag == "Enemy")
-                    {
-                        collider.GetComponent<PhysicBookHit>().OnDamage(swordDamage);
-                    }
+                    if (collider.tag == "Enemy")
+                        collider.GetComponent<MagicBook>().cur_health -= swordDamage; 
                 }
 
-                anim.SetTrigger("atk");
-                curTime = coolTime;
+                swordCurTime = swordCoolTime;
             }
         }
         else
         {
-            curTime -= Time.deltaTime;
+            swordCurTime -= Time.deltaTime;
         }
+    }
+
+    void PlayAtkAnimation(int atkNum)
+    {
+        anim.SetFloat("Blend", atkNum);
+        anim.SetTrigger("atk");
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(pos.position, boxSize);
-    }
-
-    //아래는 에셋이 아닌 뼈대를 가진 플레이어일 때 가능.
-    /*void Attack()
-    {
-            if (equipWeapon == null || isDead)
-                return;
-
-            fireDelay += Time.deltaTime;
-            isFireReady = equipWeapon.rate < fireDelay;
-
-            if (dDown && isFireReady)
-            {
-                equipWeapon.Use(); //조건 충족후 무기속함수 실행
-                anim.SetTrigger(equipWeapon.type == Weapon.Type.Sword ? "doSwing" : "doShot");
-                fireDelay = 0;
-            }
-    }
-
-    void Swap()
-    {
-        int weaponIndex = -1;
-        if (sDown1) weaponIndex = 0;
-        if (sDown2) weaponIndex = 1;
-
-        if ((sDown1 || sDown2) && hasWeapons[weaponIndex] && !isDead)
-        {
-            if (weapons[weaponIndex].activeSelf == true) //장착된 무기버튼 클릭시 조건
-                return;
-            if (equipWeapon != null) //빈손일 때 조건(에러방지)
-                equipWeapon.gameObject.SetActive(false);
-
-            equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
-            equipWeapon.gameObject.SetActive(true);
-
-            anim.SetTrigger("doSwap");
-        }
-    }*/
-
-    void FixedUpdate()
-    {
+        Gizmos.DrawWireCube(swordRange.position, boxSize);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -208,5 +210,43 @@ public class Player : MonoBehaviour
             isDoubleJump = false;
             Invoke("DashDelay", dashDelaySec);
         }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+       if (other.tag == "EnemyBullet")
+        {
+            if (!isDamage)
+            {
+                //스크립트 이름을 Bullet으로 수정하면 좋을 듯..
+                //MagicHit enemyBullet = other.GetComponent<MagicHit>();
+                //health -= enemyBullet.damage;
+
+                StartCoroutine(OnDamage());
+            }
+
+            if (other.GetComponent<Rigidbody>() != null)
+                Destroy(other.gameObject);
+        }
+    }
+
+    IEnumerator OnDamage()
+    {
+        isDamage = true;
+        mesh.material.color = Color.blue;
+        if (health <= 0 && !isDead)
+            OnDie();
+
+        yield return new WaitForSeconds(1f);
+
+        isDamage = false;
+        mesh.material.color = Color.white;
+    }
+
+    void OnDie()
+    {
+        anim.SetTrigger("doDie");
+        isDead = true;
+        //manager.PlayerDead();
     }
 }

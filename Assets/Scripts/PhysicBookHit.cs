@@ -11,7 +11,7 @@ public class PhysicBookHit : MonoBehaviour
     float ATTACK_COOL = 2f;
     float distance;
     public int HIT_DAMAGE;
-    public int max_health;
+    public int max_health = 20;
     public int cur_health;
 
     bool isAttacking;
@@ -32,6 +32,8 @@ public class PhysicBookHit : MonoBehaviour
         anim_effect = GetComponentInChildren<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         Invoke("DecideMove", 1);
+
+        cur_health = max_health;
     }
 
     void Update()
