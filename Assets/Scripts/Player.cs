@@ -4,10 +4,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Progress;
 using UnityEngine.XR;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
-<<<<<<< Updated upstream
+    public static Player instance;
     public GameManager manager;
     public Camera followCamera;
 
@@ -16,18 +17,6 @@ public class Player : MonoBehaviour
     float defaultSpeed;
     public float dashDelaySec = 1.5f;
     public float jumpPower = 15;
-=======
-    #region Singleton
-    public static Player instance;
-    #endregion
-    public float speed = 15;
-    public float jumpPower = 15;
-    public float dashPower = 150;
-    public float dashDelaySec = 0.5f;
-    //public GameObject[] weapons;
-    //public bool[] hasWeapons;
-    public float swordDamage = 10;
->>>>>>> Stashed changes
 
     public int coin;
     public int health = 100;
@@ -54,7 +43,7 @@ public class Player : MonoBehaviour
     Animator anim;
     MeshRenderer mesh;
 
-    public int swordDamage = 10;
+    public float swordDamage = 10;
     public int atkNum = 0;
     float swordCurTime;
     public float swordCoolTime = 0.3f;
@@ -69,7 +58,7 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
+        instance =this;
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         mesh = GetComponent<MeshRenderer>();
@@ -191,7 +180,7 @@ public class Player : MonoBehaviour
                 foreach (Collider2D collider in collider2Ds)
                 {
                     if (collider.tag == "Enemy")
-                        collider.GetComponent<MagicBook>().cur_health -= swordDamage; 
+                        Debug.Log("공격을 했습니다.");
                 }
 
                 swordCurTime = swordCoolTime;

@@ -11,14 +11,9 @@ public class PhysicBookHit : MonoBehaviour
     float ATTACK_COOL = 2f;
     float distance;
     public int HIT_DAMAGE;
-<<<<<<< Updated upstream
-    public int max_health = 20;
-    public int cur_health;
-=======
     public float max_health;
     public float cur_health;
     public int dieMoney;
->>>>>>> Stashed changes
 
     bool isAttacking;
     bool isCoolDown;
