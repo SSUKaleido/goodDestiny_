@@ -8,7 +8,7 @@ public class ADEft : ItemEffect
     public float ADPoint;
     public override bool ExecuteRole()
     {
-        Player.instance.swordDamage *= ADPoint;
+        Player.instance.damage *= ADPoint;
         return true;
     }
 }

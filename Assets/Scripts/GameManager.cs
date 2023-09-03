@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
 {
     public int stage_count;
     public int chapter_count;
-    public int max_health;
-    public int cur_health;
+    public float max_health;
+    public float cur_health;
     public int roundMoney;
     public int totalMoney;
     public float stopWatch;
@@ -155,8 +155,10 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("Main");
     }
-    public void TakeDamage(int damage)
+
+    public void TakeDamage(float damage)
     {
+        Debug.Log("player: 데미지를 입었다!");
         if (cur_health > 0)
         {
             cur_health -= damage;
@@ -164,6 +166,12 @@ public class GameManager : MonoBehaviour
         else
             StartCoroutine(PlayerDead());
     }
+
+    public void GetMoney(int money)
+    {
+        roundMoney += money;
+    }
+
     IEnumerator PlayerDead()
     {
         isGameOver = true;

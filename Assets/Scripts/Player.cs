@@ -12,15 +12,12 @@ public class Player : MonoBehaviour
     public GameManager manager;
     public Camera followCamera;
 
+    public float damage = 10;   //근접, 원거리 공격 모두 포함(원거리 공격은 5초후에 사라지기 때문에 다중 공격가능)
     public float speed = 8;
     public float dashSpeed = 30;
     float defaultSpeed;
     public float dashDelaySec = 1.5f;
     public float jumpPower = 15;
-
-    public int coin;
-    public int health = 100;
-    public int score;
 
     public int maxCoin = 10000;
     public int maxHealth = 100;
@@ -41,13 +38,12 @@ public class Player : MonoBehaviour
 
     Rigidbody2D rigid;
     Animator anim;
-    MeshRenderer mesh;
+    SpriteRenderer mesh;
 
-    public float swordDamage = 10;
     public int atkNum = 0;
     float swordCurTime;
     public float swordCoolTime = 0.3f;
-    public Transform swordRange;
+    public GameObject swordRange;
     public Vector2 boxSize;
 
     float bulletCurTime;
@@ -61,7 +57,7 @@ public class Player : MonoBehaviour
         instance =this;
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        mesh = GetComponent<MeshRenderer>();
+        mesh = GetComponent<SpriteRenderer>();
 
         defaultSpeed = speed;
         //hasWeapons[0] = true;
@@ -171,17 +167,11 @@ public class Player : MonoBehaviour
         { 
             if(cDown)
             {
-                Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(swordRange.position, boxSize, 0);
+                Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(swordRange.transform.position, boxSize, 0);
                 
                 PlayAtkAnimation(atkNum++);
                 if (atkNum > 1)
                     atkNum = 0;
-
-                foreach (Collider2D collider in collider2Ds)
-                {
-                    if (collider.tag == "Enemy")
-                        Debug.Log("공격을 했습니다.");
-                }
 
                 swordCurTime = swordCoolTime;
             }
@@ -190,6 +180,16 @@ public class Player : MonoBehaviour
         {
             swordCurTime -= Time.deltaTime;
         }
+    }
+
+    //애니메이션 공격하는 중에 실행되는 함수(유니티내에서 편집)
+    void SwordRangeEnabled()
+    {
+        swordRange.SetActive(true);
+    }
+    void SwordRangeDisabled()
+    {
+        swordRange.SetActive(false);
     }
 
     void PlayAtkAnimation(int atkNum)
@@ -201,7 +201,7 @@ public class Player : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(swordRange.position, boxSize);
+        Gizmos.DrawWireCube(swordRange.transform.position, boxSize);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -215,41 +215,26 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter2D(Collider2D other)
     {
        if (other.tag == "EnemyBullet")
         {
             if (!isDamage)
             {
-                //스크립트 이름을 Bullet으로 수정하면 좋을 듯..
-                //MagicHit enemyBullet = other.GetComponent<MagicHit>();
-                //health -= enemyBullet.damage;
-
+                GameManager.Instance.TakeDamage(Enemy_status.instance.damage);
                 StartCoroutine(OnDamage());
             }
-
-            if (other.GetComponent<Rigidbody>() != null)
-                Destroy(other.gameObject);
         }
     }
 
     IEnumerator OnDamage()
     {
         isDamage = true;
-        mesh.material.color = Color.blue;
-        if (health <= 0 && !isDead)
-            OnDie();
+        mesh.material.color = Color.red;
 
         yield return new WaitForSeconds(1f);
 
         isDamage = false;
         mesh.material.color = Color.white;
-    }
-
-    void OnDie()
-    {
-        anim.SetTrigger("doDie");
-        isDead = true;
-        //manager.PlayerDead();
     }
 }
