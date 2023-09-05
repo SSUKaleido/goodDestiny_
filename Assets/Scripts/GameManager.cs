@@ -167,10 +167,6 @@ public class GameManager : MonoBehaviour
             StartCoroutine(PlayerDead());
     }
 
-    public void GetMoney(int money)
-    {
-        roundMoney += money;
-    }
 
     IEnumerator PlayerDead()
     {

@@ -6,22 +6,21 @@ public class Enemy_status : MonoBehaviour
 {
     public static Enemy_status instance;
 
-    private float maxHealth;
+    public float maxHealth;
     public float curHealth;
     public int money;
     public float damage;
 
     public bool isDead;
 
-    private Rigidbody rb;
+    public SpriteRenderer sprite;
     private Animator anim;
 
     private void Awake()
     {
         instance = this; 
 
-        maxHealth = curHealth;
-        rb = GetComponentInParent<Rigidbody>();
+        curHealth = maxHealth;
         anim = GetComponentInParent<Animator>();
     }
 
@@ -43,9 +42,11 @@ public class Enemy_status : MonoBehaviour
     {
         if (curHealth > 0)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.01f);
+            sprite.material.color = Color.red;
 
-            anim.SetTrigger("Damaged");
+            yield return new WaitForSeconds(0.3f);
+            sprite.material.color = Color.white;
         }
         else
         {
@@ -57,7 +58,7 @@ public class Enemy_status : MonoBehaviour
             anim.SetTrigger("Death");
             isDead = true;
 
-            GameManager.Instance.GetMoney(money);
+            GameManager.Instance.roundMoney += money;
 
             Destroy(gameObject, 3);
         }

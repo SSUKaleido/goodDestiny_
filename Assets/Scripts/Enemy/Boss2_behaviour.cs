@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Enemy_behaviour : MonoBehaviour
+public class Boss2 : MonoBehaviour
 {
     #region Public Variables
     public float attackDistance; //공격 최소 거리
@@ -93,7 +93,7 @@ public class Enemy_behaviour : MonoBehaviour
         if(timer <= 0 && cooling && attackMode)
         {
             cooling = false;
-            //timer = intTimer; 어차피 Attack()이 실행되면 실행될 코드인데.
+            //timer = intTimer; 어차피 공격하게되면 실행될 코드 
         }
     }
 

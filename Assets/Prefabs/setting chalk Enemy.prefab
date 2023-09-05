@@ -360,7 +360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackDistance: 2
   moveSpeed: 2
-  timer: 3
+  timer: 2
   leftLimit: {fileID: 3468937989311846611}
   rightLimit: {fileID: 526030058167112841}
   target: {fileID: 0}
@@ -448,11 +448,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e43d0a457e8dcd44bc64295faf9dcce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 0}
-  curHealth: 100
+  maxHealth: 100
+  curHealth: 0
   money: 1000
   damage: 5
   isDead: 0
+  sprite: {fileID: 4037168301514893243}
 --- !u!1 &7320357294949437702
 GameObject:
   m_ObjectHideFlags: 0
