@@ -29,6 +29,8 @@ public class Slot : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
             textImage.gameObject.SetActive(true);
             text.text = item.itemName + ":" + ItemDatabase.instance.itemInfo[item.itemName];
         }
+        else
+            return;
     }
 
     public void OnPointerExit(PointerEventData eventData)

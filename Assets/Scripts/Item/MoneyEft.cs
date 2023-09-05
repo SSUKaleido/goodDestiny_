@@ -8,7 +8,7 @@ public class MoneyEft : ItemEffect
     public int MoneyPoint;
     public override bool ExecuteRole()
     {
-        GameManager.Instance.roundMoney += MoneyPoint;
+        GameManager.instance.roundMoney += MoneyPoint;
         return true;
     }
 }

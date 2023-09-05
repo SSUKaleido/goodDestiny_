@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8319414377467224740}
   - component: {fileID: 6637824771296605788}
   - component: {fileID: 4926783105572021094}
+  - component: {fileID: -8647013872814046472}
   m_Layer: 0
   m_Name: Goal
   m_TagString: Finish
@@ -100,6 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   remainMonster: 2
+  isBossroom: 0
   isPlayer: 0
 --- !u!61 &6637824771296605788
 BoxCollider2D:
@@ -160,4 +162,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   goal: {fileID: 4710218239699657913}
   fieldItemPreFab: {fileID: 7601248496235268760, guid: 8cd5d23736eecb14ab56ddca771db6fc, type: 3}
-  pos: []
+  pos:
+  - {x: 40, y: -2, z: 0}
+  - {x: 43, y: -2, z: 0}
+  - {x: 46, y: -2, z: 0}
+--- !u!114 &-8647013872814046472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192698977739095553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a00c47a579393244a2da500ada5a79a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  remainMonster: 0
+  isBossroom: 0
+  isPlayer: 0

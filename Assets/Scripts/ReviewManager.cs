@@ -7,25 +7,13 @@ public class ReviewManager : MonoBehaviour
 {
     public int enemyKill;
     public Text text;
-    private static ReviewManager instance;
-    public static ReviewManager Instance
+    #region Singleton
+    public static ReviewManager instance;
+    private void Awake()
     {
-        get
-        {
-            if (null == instance)
-            {
-                return null;
-            }
-            return instance;
-        }
+        instance = this;
     }
-    void Awake()
-    { 
-        if (null == instance)
-        {
-            instance = this;
-        }
-    }
+    #endregion
 
     void Start()
     {
@@ -33,15 +21,15 @@ public class ReviewManager : MonoBehaviour
     }
     void Update()
     {
-        if (GameManager.Instance.isGameOver == true)
+        if (GameManager.instance.isGameOver == true)
         {
             DeathUI();
         }
     }
     void DeathUI()
     {
-        text.text = ((int)Mathf.Round(GameManager.Instance.stopWatch)) / 60 + ":" + 
-                ((int)Mathf.Round(GameManager.Instance.stopWatch)) % 60 + "\n"
-                   + enemyKill + "\n" + GameManager.Instance.roundMoney;
+        text.text = ((int)Mathf.Round(GameManager.instance.stopWatch)) / 60 + ":" + 
+                ((int)Mathf.Round(GameManager.instance.stopWatch)) % 60 + "\n"
+                   + enemyKill + "\n" + GameManager.instance.roundMoney;
     }
 }

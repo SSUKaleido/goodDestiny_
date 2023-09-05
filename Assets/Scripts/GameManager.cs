@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,44 +16,37 @@ public class GameManager : MonoBehaviour
     public int totalMoney;
     public float stopWatch;
 
-    public bool isGameOver=false;
-    public bool isPause=false;
-    public bool isText=false;
+    public bool isGameOver;
+    public bool isStageChange;
+    public bool isPause;
+    public bool isText;
 
     public GameObject player;
     public FadeEffect fe;
-
     public GameObject gameoverUI;
     public GameObject pauseUI;
+    public GameObject talkUI;
 
-    public GameObject[] chapter1;
-    public GameObject[] chapter2;
-    public GameObject[] chapter3;
+    public GameObject[] stageIndex1;
+    public GameObject[] stageIndex2;
     public GameObject[] bossStage;
-
-    private static GameManager instance;
-    public static GameManager Instance
+    #region Singleton
+    public static GameManager instance;
+    private void Awake()
     {
-        get
-        {
-            if (null == instance)
-            {
-                return null;
-            }
-            return instance;
-        }
+        instance = this;
+        PlayerPrefs.GetInt("stage_count", stage_count);
+        PlayerPrefs.GetInt("chapter_count", chapter_count);
+        PlayerPrefs.GetFloat("max_health", max_health);
+        PlayerPrefs.GetFloat("cur_health", cur_health);
+        PlayerPrefs.GetInt("roundMoney", roundMoney);
+        PlayerPrefs.GetInt("totalMoney", totalMoney);
+        PlayerPrefs.GetFloat("stopWatch", stopWatch);
     }
-    void Awake()
-    {
-        if (null == instance)
-        {
-            instance = this;
-        }
-    }
+    #endregion
     void Start()
     {
-        max_health = 100;
-        cur_health = 100;
+        GoStory();
         player = GameObject.FindWithTag("Player");
     }
 
@@ -64,18 +58,16 @@ public class GameManager : MonoBehaviour
     }
     void MenuSet()
     {
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (pauseUI.activeSelf)
             {
                 isPause = false;
-                Time.timeScale = 1;
                 pauseUI.SetActive(false);
             }
             else
             {
                 isPause = true;
-                Time.timeScale = 0;
                 pauseUI.SetActive(true);
             }
         }
@@ -83,6 +75,8 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1;
         }
+        else
+            Time.timeScale = 0;
     }
     public void ChangePause()
     {
@@ -95,64 +89,68 @@ public class GameManager : MonoBehaviour
         switch (chapter_count)
         {
             case 0:
-                if (stage_count < 2) //ÀÏ¹Ý ¸Ê À¯Áö
+                if (stage_count < 2) 
                 {
-                    chapter1[stage_count++].SetActive(false);
-                    chapter1[stage_count].SetActive(true);
+                    stageIndex1[stage_count++].SetActive(false);
+                    stageIndex1[stage_count].SetActive(true);
                 }
-                else //º¸½º ¸Ê ÀÌµ¿
+                else 
                 {
-                    chapter1[stage_count].SetActive(false);
+                    stageIndex1[stage_count].SetActive(false);
                     stage_count = 0;
                     bossStage[chapter_count++].SetActive(true);
+                    GoStory();
                 }
                 break;
             case 1:
-                if (stage_count < 2) //ÀÏ¹Ý ¸Ê À¯Áö
+                if (stage_count == 0)
                 {
-                    chapter2[stage_count++].SetActive(false);
-                    chapter2[stage_count].SetActive(true);
+                    bossStage[0].SetActive(false);
+                    stageIndex2[0].SetActive(true);
+                    stage_count++;
                 }
-                else //º¸½º ¸Ê ÀÌµ¿
+                else if (stage_count ==1) 
                 {
-                    chapter2[stage_count].SetActive(false);
-                    stage_count = 0;
-                    bossStage[chapter_count++].SetActive(true);
+                    stageIndex2[0].SetActive(false);
+                    stage_count++;
+                    stageIndex2[1].SetActive(true);
                 }
-                break;
-            case 2:
-                if (stage_count < 2) //ÀÏ¹Ý ¸Ê À¯Áö
+                else if (stage_count == 2)
                 {
-                    chapter3[stage_count++].SetActive(false);
-                    chapter3[stage_count].SetActive(true);
+                    stageIndex2[1].SetActive(false);
+                    stage_count++;
+                    stageIndex2[2].SetActive(true);
                 }
-                else //º¸½º ¸Ê ÀÌµ¿
+                else 
                 {
-                    chapter3[stage_count].SetActive(false);
-                    stage_count = 0;
-                    bossStage[chapter_count++].SetActive(true);
+                    stageIndex2[2].SetActive(false);
+                    bossStage[chapter_count].SetActive(true);
+                    GoStory();
                 }
                 break;
         }
         yield return StartCoroutine(fe.OutGradation());
     }
-    public void NextScene()
+    public void GoStory()
     {
-        switch (chapter_count)
-        {
-            case 1:
-                SceneManager.LoadScene("Chapter1");
-                break;
-            case 2:
-                SceneManager.LoadScene("Chapter2");
-                break;
-            case 3:
-                SceneManager.LoadScene("Chapter3");
-                break;
-        }
+        isPause = true;
+        StoryManager.instance.StartStory();
     }
+
+    private void DataSave()
+    {
+        PlayerPrefs.SetInt("stage_count", stage_count);
+        PlayerPrefs.SetInt("chapter_count", chapter_count);
+        PlayerPrefs.SetFloat("max_health", max_health);
+        PlayerPrefs.SetFloat("cur_health", cur_health);
+        PlayerPrefs.SetInt("roundMoney", roundMoney);
+        PlayerPrefs.SetInt("totalMoney", totalMoney);
+        PlayerPrefs.SetFloat("stopWatch", stopWatch);
+    }
+
     public void GoMain()
     {
+        DataSave();
         SceneManager.LoadScene("Main");
     }
 
@@ -172,9 +170,12 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
         yield return new WaitForSeconds(2);
-        Time.timeScale = 0;
+        isPause = true;
         gameoverUI.SetActive(true);
         totalMoney += roundMoney;
     }
+    public void GetMoney(int money)
+    {
+        roundMoney += money;
+    }
 }
-    

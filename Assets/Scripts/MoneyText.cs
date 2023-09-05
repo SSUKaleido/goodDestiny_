@@ -11,12 +11,12 @@ public class MoneyText : MonoBehaviour
     void Start()
     {
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
-        player_money = 0;
+        player_money = gm.roundMoney;
         ScriptTxt.text = ""+player_money;
     }
     void Update()
     {
-        player_money = gm.totalMoney;
+        player_money = gm.roundMoney;
         ScriptTxt.text = "" + player_money;
     }
 }

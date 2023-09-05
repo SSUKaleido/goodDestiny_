@@ -5,6 +5,7 @@ using UnityEngine;
 public class FinishControl : MonoBehaviour
 {
     public int remainMonster;
+    public bool isBossroom;
     public bool isPlayer = false;
     private void Update()
     {
@@ -27,7 +28,7 @@ public class FinishControl : MonoBehaviour
     public void MonsterDied()
     {
         remainMonster--;
-        ReviewManager.Instance.enemyKill++;
+        ReviewManager.instance.enemyKill++;
         if (remainMonster <= 0)
             OpenPortal();
     }
@@ -40,7 +41,12 @@ public class FinishControl : MonoBehaviour
     {
         if (Input.GetButtonDown("Vertical") && isPlayer)
         {
-            StartCoroutine(GameManager.Instance.NextStage());
+            if (isBossroom) 
+            {
+                GameManager.instance.GoStory();
+            }
+            else
+                StartCoroutine(GameManager.instance.NextStage());
         }
     }
 }

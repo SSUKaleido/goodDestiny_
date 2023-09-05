@@ -9,7 +9,7 @@ public class MagicHit : MonoBehaviour
     {
         if (other.gameObject.tag=="Player")
         {
-            GameManager.Instance.TakeDamage(HIT_DAMAGE);
+            GameManager.instance.TakeDamage(HIT_DAMAGE);
             Destroy(gameObject);
         }
         else if (other.gameObject.tag == "Ground")

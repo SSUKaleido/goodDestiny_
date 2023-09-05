@@ -11,7 +11,7 @@ public class PhysicBookHit : MonoBehaviour
     float ATTACK_COOL = 2f;
     float distance;
     public int HIT_DAMAGE;
-    public float max_health;
+    public float max_health=20;
     public float cur_health;
     public int dieMoney;
 
@@ -37,7 +37,7 @@ public class PhysicBookHit : MonoBehaviour
         cur_health = max_health;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         distance = Vector2.Distance(player.position, transform.position);
         if (distance <= ATTACK_RANGE)
@@ -123,7 +123,7 @@ public class PhysicBookHit : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag=="Player")
-            GameManager.Instance.TakeDamage(HIT_DAMAGE);
+            GameManager.instance.TakeDamage(HIT_DAMAGE);
     }
     IEnumerator OnDamage()
     {
@@ -142,7 +142,7 @@ public class PhysicBookHit : MonoBehaviour
     void Die()
     {
         Destroy(gameObject);
-        GameManager.Instance.roundMoney += dieMoney;
+        GameManager.instance.roundMoney += dieMoney;
         fc.MonsterDied();
     }
 }

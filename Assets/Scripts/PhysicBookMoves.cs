@@ -25,7 +25,7 @@ public class PhysicBookMoves : MonoBehaviour
         Invoke("DecideMove", 1);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         distance = Vector2.Distance(player.position, transform.position);
         rigid.velocity = new Vector2(next_move, rigid.velocity.y);

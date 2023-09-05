@@ -58,7 +58,7 @@ public class Enemy_status : MonoBehaviour
             anim.SetTrigger("Death");
             isDead = true;
 
-            GameManager.Instance.roundMoney += money;
+            GameManager.instance.GetMoney(money);
 
             Destroy(gameObject, 3);
         }

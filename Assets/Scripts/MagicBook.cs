@@ -6,8 +6,8 @@ public class MagicBook : MonoBehaviour
     Animator anim;
     Rigidbody2D rigid;
 
-    public int max_health;
-    public int cur_health;
+    public float max_health;
+    public float cur_health;
     public int next_move;
     float ATTACK_RANGE = 9f;
     float ATTACK_COOL = 4f;
@@ -34,7 +34,7 @@ public class MagicBook : MonoBehaviour
         Invoke("DecideMove", 1);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         distance = Vector2.Distance(player.position, transform.position);
         rigid.velocity = new Vector2(next_move, rigid.velocity.y);
@@ -172,7 +172,7 @@ public class MagicBook : MonoBehaviour
     void Die()
     {
         Destroy(gameObject);
-        GameManager.Instance.roundMoney += 100;
+        GameManager.instance.roundMoney += 100;
         fc.MonsterDied();
     }
 }

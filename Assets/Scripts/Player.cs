@@ -19,6 +19,10 @@ public class Player : MonoBehaviour
     public float dashDelaySec = 1.5f;
     public float jumpPower = 15;
 
+    public int coin;
+    public int health = 100;
+    public int score;
+
     public int maxCoin = 10000;
     public int maxHealth = 100;
 
@@ -40,6 +44,7 @@ public class Player : MonoBehaviour
     Animator anim;
     SpriteRenderer mesh;
 
+    public float swordDamage = 10;
     public int atkNum = 0;
     float swordCurTime;
     public float swordCoolTime = 0.3f;
@@ -74,17 +79,18 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+
         Move();
     }
 
     void GetInput()
     { //대화 실행 중 이동 불가 설정
-        hAxis = Input.GetAxisRaw("Horizontal");
-        hDown = Input.GetButton("Horizontal");
-        jDown = Input.GetButtonDown("Jump");
-        zDown = Input.GetKeyDown(KeyCode.Z);
-        xDown = Input.GetKeyDown(KeyCode.X);
-        cDown = Input.GetKeyDown(KeyCode.C);
+        hAxis = StoryManager.instance.isStory ? 0 : Input.GetAxisRaw("Horizontal");
+        hDown = StoryManager.instance.isStory ? false : Input.GetButton("Horizontal");
+        jDown = StoryManager.instance.isStory ? false : Input.GetButtonDown("Jump");
+        zDown = StoryManager.instance.isStory ? false : Input.GetKeyDown(KeyCode.Z);
+        xDown = StoryManager.instance.isStory ? false : Input.GetKeyDown(KeyCode.X);
+        cDown = StoryManager.instance.isStory ? false : Input.GetKeyDown(KeyCode.C);
     }
 
     void Move()
@@ -197,13 +203,13 @@ public class Player : MonoBehaviour
         anim.SetFloat("Blend", atkNum);
         anim.SetTrigger("atk");
     }
-
+    /*
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(swordRange.transform.position, boxSize);
     }
-
+    */
     void OnCollisionEnter2D(Collision2D collision)
     {
         //버그있음: 천장에 부딪쳐도 ground라고 인식 > tile맵 변경 혹은 ray 사용으로 대체?
@@ -221,7 +227,7 @@ public class Player : MonoBehaviour
         {
             if (!isDamage)
             {
-                GameManager.Instance.TakeDamage(Enemy_status.instance.damage);
+                GameManager.instance.TakeDamage(Enemy_status.instance.damage);
                 StartCoroutine(OnDamage());
             }
         }

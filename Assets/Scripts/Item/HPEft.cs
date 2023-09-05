@@ -8,9 +8,8 @@ public class HPEft : ItemEffect
     public int hpPoint;
     public override bool ExecuteRole()
     {
-        Debug.Log("t");
-        GameManager.Instance.max_health += hpPoint;
-        GameManager.Instance.cur_health += hpPoint;
+        GameManager.instance.max_health += hpPoint;
+        GameManager.instance.cur_health += hpPoint;
         return true;
     }
 }
