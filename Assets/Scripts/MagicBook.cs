@@ -16,8 +16,9 @@ public class MagicBook : MonoBehaviour
     bool isAttacking;
     bool isCoolDown;
 
-    public FinishControl fc;
+    public RemainMonster rm;
 
+    AudioSource audioSource;
     SpriteRenderer spriteRenderer;
     GameObject magic_circle;
     Animator anim_magic;
@@ -26,6 +27,7 @@ public class MagicBook : MonoBehaviour
     
     void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
         magic_circle = transform.GetChild(0).gameObject;
@@ -82,12 +84,14 @@ public class MagicBook : MonoBehaviour
     {
         if (collision.tag == "Weapon")
         {
-            StartCoroutine(OnDamage());
+            StartCoroutine(OnDamage(Player.instance.damage));
         }
     }
-    IEnumerator OnDamage()
+    IEnumerator OnDamage(float damage)
     {
         spriteRenderer.color = Color.red;
+        AudioManager.instance.PlaySFX("Attack");
+        cur_health -= damage;
         yield return new WaitForSeconds(0.1f);
         if (cur_health > 0)
         {
@@ -96,6 +100,7 @@ public class MagicBook : MonoBehaviour
         else
         {
             spriteRenderer.color = Color.gray;
+            yield return new WaitForSeconds(0.2f);
             Die();
         }
     }
@@ -120,6 +125,7 @@ public class MagicBook : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         GameObject alphabet = Instantiate(bullet,transform.position,transform.rotation);
         Rigidbody2D alp_rigid = alphabet.GetComponent<Rigidbody2D>();
+        audioSource.Play();
         alp_rigid.velocity=(player.position - transform.position).normalized*8f;
         yield return new WaitForSeconds(0.833f);
 
@@ -173,6 +179,6 @@ public class MagicBook : MonoBehaviour
     {
         Destroy(gameObject);
         GameManager.instance.roundMoney += 100;
-        fc.MonsterDied();
+        rm.MonsterDied();
     }
 }

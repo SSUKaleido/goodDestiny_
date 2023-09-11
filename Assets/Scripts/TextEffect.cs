@@ -8,10 +8,15 @@ public class TextEffect : MonoBehaviour
     public string textMsg;
     public int CharPerSeconds;
     public Text text;
+    public AudioSource audioSource;
     float interval;
     int index;
     public bool isAnim;
 
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     private Coroutine textEffectCoroutine;
 
     public void SetMsg(string msg)
@@ -42,10 +47,11 @@ public class TextEffect : MonoBehaviour
         while (index < textMsg.Length)
         {
             text.text += textMsg[index];
+            if (textMsg[index] != ' ' || textMsg[index] != '.')
+                audioSource.Play();
             index++;
             yield return new WaitForSecondsRealtime(interval);
         }
-
         EffectEnd();
     }
 
@@ -53,7 +59,7 @@ public class TextEffect : MonoBehaviour
     {
         isAnim = false;
         text.text = textMsg;
-        StoryManager.instance.talkIndex++; // 이 부분을 필요에 따라 활성화하세요.
+        StoryManager.instance.talkIndex++;
     }
 
     public void StopTextEffect()

@@ -5,25 +5,14 @@ using UnityEngine.UI;
 
 public class FadeEffect : MonoBehaviour
 {
-    private static FadeEffect instance;
-    public static FadeEffect Instance
-    {
-        get
-        {
-            if (null == instance)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
+    #region Singleton
+    public static FadeEffect instance;
     private void Awake()
     {
-        if (null == instance)
-        {
-            instance = this;
-        }
+        instance = this;
     }
+    #endregion
+
     public IEnumerator InGradation()
     {
         gameObject.SetActive(true);

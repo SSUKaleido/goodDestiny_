@@ -23,10 +23,12 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
     public FadeEffect fe;
+    AudioManager am;
     public GameObject gameoverUI;
     public GameObject pauseUI;
     public GameObject talkUI;
 
+    public GameObject shelter;
     public GameObject[] stageIndex1;
     public GameObject[] stageIndex2;
     public GameObject[] bossStage;
@@ -42,16 +44,19 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.GetInt("roundMoney", roundMoney);
         PlayerPrefs.GetInt("totalMoney", totalMoney);
         PlayerPrefs.GetFloat("stopWatch", stopWatch);
+        am = AudioManager.instance;
     }
     #endregion
     void Start()
     {
-        GoStory();
         player = GameObject.FindWithTag("Player");
+        am.PlayBGM("Shelter");
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+            StartCoroutine(NextStage());
         MenuSet();
         if (!isGameOver)
             stopWatch += Time.deltaTime;
@@ -89,24 +94,51 @@ public class GameManager : MonoBehaviour
         switch (chapter_count)
         {
             case 0:
-                if (stage_count < 2) 
+                if (stage_count == 0)
                 {
-                    stageIndex1[stage_count++].SetActive(false);
-                    stageIndex1[stage_count].SetActive(true);
+                    shelter.SetActive(false);
+                    stageIndex1[0].SetActive(true);
+                    am.PlayBGM("Story1");
+                    GoStory();
+                    stage_count++;
                 }
-                else 
+                else if (stage_count == 1)
                 {
-                    stageIndex1[stage_count].SetActive(false);
+                    stageIndex1[0].SetActive(false);
+                    stage_count++;
+                    stageIndex1[1].SetActive(true);
+                }
+                else if (stage_count == 2)
+                {
+                    stageIndex1[1].SetActive(false);
+                    stage_count++;
+                    stageIndex1[2].SetActive(true);
+                }
+                else if (stage_count == 3)
+                {
+                    stageIndex1[2].SetActive(false);
+                    stage_count++;
+                    bossStage[chapter_count].SetActive(true);
+                    am.PlayBGM("Story2");
+                    GoStory();
+                }
+                else
+                {
+                    bossStage[0].SetActive(false);
+                    chapter_count++;
                     stage_count = 0;
-                    bossStage[chapter_count++].SetActive(true);
+                    shelter.SetActive(true);
+                    am.PlayBGM("Story3");
                     GoStory();
                 }
                 break;
             case 1:
                 if (stage_count == 0)
                 {
-                    bossStage[0].SetActive(false);
+                    shelter.SetActive(false);
                     stageIndex2[0].SetActive(true);
+                    am.PlayBGM("Story4");
+                    GoStory();
                     stage_count++;
                 }
                 else if (stage_count ==1) 
@@ -121,10 +153,17 @@ public class GameManager : MonoBehaviour
                     stage_count++;
                     stageIndex2[2].SetActive(true);
                 }
-                else 
+                else if (stage_count == 3)
                 {
                     stageIndex2[2].SetActive(false);
                     bossStage[chapter_count].SetActive(true);
+                    stage_count++;
+                    am.PlayBGM("Story5");
+                    GoStory();
+                }
+                else
+                {
+                    am.PlayBGM("Story6");
                     GoStory();
                 }
                 break;
@@ -159,6 +198,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("player: 데미지를 입었다!");
         if (cur_health > 0)
         {
+            am.PlaySFX("Hit");
             cur_health -= damage;
         }
         else
@@ -169,6 +209,7 @@ public class GameManager : MonoBehaviour
     IEnumerator PlayerDead()
     {
         isGameOver = true;
+        am.PlaySFX("Die");
         yield return new WaitForSeconds(2);
         isPause = true;
         gameoverUI.SetActive(true);

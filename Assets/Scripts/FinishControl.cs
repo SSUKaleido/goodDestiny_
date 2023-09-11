@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class FinishControl : MonoBehaviour
 {
-    public int remainMonster;
+    AudioSource audioSource;
     public bool isBossroom;
     public bool isPlayer = false;
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     private void Update()
     {
         Portal();
@@ -25,28 +29,20 @@ public class FinishControl : MonoBehaviour
             isPlayer = false;
         }
     }
-    public void MonsterDied()
-    {
-        remainMonster--;
-        ReviewManager.instance.enemyKill++;
-        if (remainMonster <= 0)
-            OpenPortal();
-    }
-    void OpenPortal()
-    {
-        gameObject.SetActive(true);
-    }
 
     void Portal()
     {
         if (Input.GetButtonDown("Vertical") && isPlayer)
         {
-            if (isBossroom) 
+            AudioManager.instance.PlaySFX("NextStage");
+            if (isBossroom)
             {
                 GameManager.instance.GoStory();
             }
             else
+            {
                 StartCoroutine(GameManager.instance.NextStage());
+            }
         }
     }
 }

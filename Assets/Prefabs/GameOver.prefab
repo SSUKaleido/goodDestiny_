@@ -187,7 +187,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7218302551294816758
 RectTransform:
   m_ObjectHideFlags: 0
@@ -338,13 +338,14 @@ GameObject:
   - component: {fileID: 6598504248404105681}
   - component: {fileID: 1465410047408789794}
   - component: {fileID: 1423280706072548675}
+  - component: {fileID: 1910100632628115347}
   m_Layer: 5
   m_Name: GameOver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &880559242379930484
 RectTransform:
   m_ObjectHideFlags: 0
@@ -428,6 +429,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1910100632628115347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6684468055628727331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd089cac32ebb4e408a74df04842c46b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyKill: 0
+  text: {fileID: 1152942584054775093}
 --- !u!1 &7188828156487833456
 GameObject:
   m_ObjectHideFlags: 0

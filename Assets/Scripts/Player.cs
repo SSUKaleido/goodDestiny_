@@ -19,14 +19,9 @@ public class Player : MonoBehaviour
     public float dashDelaySec = 1.5f;
     public float jumpPower = 15;
 
-    public int coin;
-    public int health = 100;
     public int score;
 
-    public int maxCoin = 10000;
-    public int maxHealth = 100;
-
-    float hAxis;
+    public float hAxis;
 
     bool hDown;
     bool jDown;
@@ -40,11 +35,11 @@ public class Player : MonoBehaviour
     bool isDamage;
     bool isDead;
 
+    public AudioManager am;
     Rigidbody2D rigid;
     Animator anim;
     SpriteRenderer mesh;
 
-    public float swordDamage = 10;
     public int atkNum = 0;
     float swordCurTime;
     public float swordCoolTime = 0.3f;
@@ -97,7 +92,8 @@ public class Player : MonoBehaviour
     {
         //Move Speed
         rigid.velocity = new Vector2(hAxis * defaultSpeed, rigid.velocity.y);
-
+        if (hAxis!=0 && !isJump)
+            am.PlaySFX("Run");
         anim.SetBool("isWalking", hDown);
 
         //Stop Speed
@@ -134,6 +130,7 @@ public class Player : MonoBehaviour
             isDash = true;
             Vector2 vec = new Vector2(rigid.velocity.x, 0);
             rigid.AddForce(vec, ForceMode2D.Impulse);
+            am.PlaySFX("Dash");
             anim.SetBool("isDashing", true);
             defaultSpeed = dashSpeed;
             Invoke("DashExit", 0.15f);
@@ -161,6 +158,7 @@ public class Player : MonoBehaviour
             if(xDown)
             {
                 Instantiate(bullet, bulletPos.position, transform.rotation);
+                am.PlaySFX("Skill");
                 bulletCurTime = bulletCoolTime;
             }
         }
@@ -174,7 +172,10 @@ public class Player : MonoBehaviour
             if(cDown)
             {
                 Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(swordRange.transform.position, boxSize, 0);
-                
+                if (atkNum == 0)
+                    am.PlaySFX("Attack1");
+                else
+                    am.PlaySFX("Attack2");
                 PlayAtkAnimation(atkNum++);
                 if (atkNum > 1)
                     atkNum = 0;
@@ -237,7 +238,6 @@ public class Player : MonoBehaviour
     {
         isDamage = true;
         mesh.material.color = Color.red;
-
         yield return new WaitForSeconds(1f);
 
         isDamage = false;

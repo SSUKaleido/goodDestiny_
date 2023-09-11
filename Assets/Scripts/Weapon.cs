@@ -40,10 +40,8 @@ public class Weapon : MonoBehaviour
         yield return new WaitForSeconds(0.1f); // 0.1√  ¥Î±‚
         swordArea.enabled = true;
         trailEffect.enabled = true;
-
         yield return new WaitForSeconds(0.5f);
         swordArea.enabled = false;
-
         yield return new WaitForSeconds(0.3f);
         trailEffect.enabled = false;
     }

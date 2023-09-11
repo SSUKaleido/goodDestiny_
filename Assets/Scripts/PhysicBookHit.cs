@@ -18,7 +18,8 @@ public class PhysicBookHit : MonoBehaviour
     bool isAttacking;
     bool isCoolDown;
 
-    public FinishControl fc;
+    AudioSource audioSource;
+    public RemainMonster rm;
     SpriteRenderer spriteRenderer;
     GameObject effect;
     Animator anim_effect;
@@ -27,6 +28,7 @@ public class PhysicBookHit : MonoBehaviour
 
     void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
         effect = transform.GetChild(0).gameObject;
@@ -85,6 +87,7 @@ public class PhysicBookHit : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         yield return new WaitForSeconds(0.2f);
         yield return new WaitForSeconds(0.2f);
+        audioSource.Play();
         effect.SetActive(true);
         anim_effect.SetTrigger("IsBookAttack");
         yield return new WaitForSeconds(0.2f);
@@ -113,18 +116,32 @@ public class PhysicBookHit : MonoBehaviour
         yield return new WaitForSeconds(ATTACK_COOL);
         isCoolDown = false;
     }
-
-    public void OnDamage(float damage)
-    {
-        cur_health -= damage;
-        StartCoroutine(OnDamage());
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag=="Player")
-            GameManager.instance.TakeDamage(HIT_DAMAGE);
+        if (collision.tag == "Weapon")
+        {
+            StartCoroutine(OnDamage(Player.instance.damage));
+        }
     }
+
+    IEnumerator OnDamage(float damage)
+    {
+        spriteRenderer.color = Color.red;
+        cur_health -= damage;
+        AudioManager.instance.PlaySFX("Attack");
+        yield return new WaitForSeconds(0.1f);
+        if (cur_health > 0)
+        {
+            spriteRenderer.color = Color.white;
+        }
+        else
+        {
+            spriteRenderer.color = Color.gray;
+            yield return new WaitForSeconds(0.2f);
+            Die();
+        }
+    }
+
     IEnumerator OnDamage()
     {
         spriteRenderer.color = Color.red;
@@ -143,6 +160,6 @@ public class PhysicBookHit : MonoBehaviour
     {
         Destroy(gameObject);
         GameManager.instance.roundMoney += dieMoney;
-        fc.MonsterDied();
+        rm.MonsterDied();
     }
 }

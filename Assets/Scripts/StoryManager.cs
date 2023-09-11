@@ -10,6 +10,7 @@ public class StoryManager : MonoBehaviour
     public bool isStory;
     public TextEffect te;
     public TalkManager tm;
+    public AudioManager am;
     public Sprite[] image;
     public Image wallImage;
     public Image textImage;
@@ -50,6 +51,26 @@ public class StoryManager : MonoBehaviour
             talkIndex = 0;
             wallImage.gameObject.SetActive(false);
             textImage.gameObject.SetActive(false);
+            if (storyIndex == 0)
+            {
+                am.PlayBGM("Chap1");
+            }
+            else if (storyIndex == 1)
+            {
+                am.PlayBGM("Boss1");
+            }
+            else if (storyIndex == 2)
+            {
+                am.PlayBGM("Shelter");
+            }
+            else if (storyIndex == 3)
+            {
+                am.PlayBGM("Chap2");
+            }
+            else if (storyIndex == 4)
+            {
+                am.PlayBGM("Boss2");
+            }
             GameManager.instance.isPause = false;
             return;
         }
