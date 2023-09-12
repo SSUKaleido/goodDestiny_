@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class Enemy_status : MonoBehaviour
 {
-    public static Enemy_status instance;
-
     public float maxHealth;
     public float curHealth;
     public int money;
-    public float damage;
 
     public bool isDead;
 
@@ -18,8 +15,6 @@ public class Enemy_status : MonoBehaviour
 
     private void Awake()
     {
-        instance = this; 
-
         curHealth = maxHealth;
         anim = GetComponentInParent<Animator>();
     }
@@ -31,9 +26,9 @@ public class Enemy_status : MonoBehaviour
         else if (collision.tag == "Weapon")
         {
             Debug.Log("enemy: 공격당했습니다.");
-            float damage = Player.instance.damage;
-            curHealth -= damage;
-            
+            float damaged = Player.instance.damage;
+            curHealth -= damaged;
+
             StartCoroutine(Damaged());
         }
     }

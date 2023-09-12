@@ -6,8 +6,11 @@ using UnityEngine;
 public class Enemy_behaviour : MonoBehaviour
 {
     #region Public Variables
+    public enum Type { Nomal, Boss };
+    public Type enemyType;
     public float attackDistance; //공격 최소 거리
     public float moveSpeed;
+    public float damage;
     public float timer; //공격 쿨타임 타이머
     public Transform leftLimit;
     public Transform rightLimit;
@@ -19,6 +22,7 @@ public class Enemy_behaviour : MonoBehaviour
     #endregion
 
     #region Private Variables
+    private Enemy_status status;
     private Animator anim;
     private float distance; //플레이어와의 거리
     private bool attackMode;
@@ -30,18 +34,19 @@ public class Enemy_behaviour : MonoBehaviour
     {
         SeletTarget();
         intTimer = timer;
-        anim = GetComponent<Animator>(); 
+        status = GetComponentInChildren<Enemy_status>();
+        anim = GetComponent<Animator>();
     }
 
     void Update()
     {
-        if (!attackMode && !Enemy_status.instance.isDead)
+        if (!attackMode && !status.isDead)
             Move();
 
-        if(!InsideofLimits() && !inRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !Enemy_status.instance.isDead)
+        if (!InsideofLimits() && !inRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !status.isDead)
             SeletTarget();
 
-        if(inRange && !Enemy_status.instance.isDead)
+        if (inRange && !status.isDead)
             EnemyLogic();
     }
 
@@ -49,13 +54,18 @@ public class Enemy_behaviour : MonoBehaviour
     {
         distance = Vector2.Distance(transform.position, target.position);
 
-        if(distance > attackDistance)
+        if (distance > attackDistance)
         {
             StopAttack();
         }
-        else if(attackDistance >= distance && cooling == false)
+        else if (attackDistance >= distance && cooling == false)
         {
-            Attack();
+            if (enemyType == Type.Nomal)
+                Attack();
+            else if (enemyType == Type.Boss)
+            {
+                BossAttack();
+            }
         }
 
         if (cooling)
@@ -67,7 +77,7 @@ public class Enemy_behaviour : MonoBehaviour
 
     void Move()
     {
-        anim.SetBool("canWalk", true); 
+        anim.SetBool("canWalk", true);
 
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
@@ -90,7 +100,7 @@ public class Enemy_behaviour : MonoBehaviour
     {
         timer -= Time.deltaTime;
 
-        if(timer <= 0 && cooling && attackMode)
+        if (timer <= 0 && cooling && attackMode)
         {
             cooling = false;
             //timer = intTimer; 어차피 공격하게되면 실행될 코드 
@@ -128,7 +138,7 @@ public class Enemy_behaviour : MonoBehaviour
         float distanceToLeft = Vector2.Distance(transform.position, leftLimit.position);
         float distanceToRight = Vector2.Distance(transform.position, rightLimit.position);
 
-        if(distanceToLeft > distanceToRight)
+        if (distanceToLeft > distanceToRight)
         {
             target = leftLimit;
         }
@@ -143,7 +153,7 @@ public class Enemy_behaviour : MonoBehaviour
     public void Flip()
     {
         Vector3 rotation = transform.eulerAngles;
-        if(transform.position.x > target.position.x)
+        if (transform.position.x > target.position.x)
         {
             rotation.y = 180f;
         }
@@ -154,4 +164,12 @@ public class Enemy_behaviour : MonoBehaviour
 
         transform.eulerAngles = rotation;
     }
+
+    void BossAttack()
+    {
+        timer = intTimer; //공격 범위에 들어왔을 때 timer 리셋
+        attackMode = true;
+    }
 }
+
+

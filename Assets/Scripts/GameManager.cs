@@ -195,6 +195,8 @@ public class GameManager : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        Player.instance.isDamage = true;
+
         Debug.Log("player: 데미지를 입었다!");
         if (cur_health > 0)
         {

@@ -32,8 +32,7 @@ public class Player : MonoBehaviour
     bool isJump;
     bool isDoubleJump;
     bool isDash;
-    bool isDamage;
-    bool isDead;
+    public bool isDamage;
 
     public AudioManager am;
     Rigidbody2D rigid;
@@ -219,18 +218,6 @@ public class Player : MonoBehaviour
             isJump = false;
             isDoubleJump = false;
             Invoke("DashDelay", dashDelaySec);
-        }
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-       if (other.tag == "EnemyBullet")
-        {
-            if (!isDamage)
-            {
-                GameManager.instance.TakeDamage(Enemy_status.instance.damage);
-                StartCoroutine(OnDamage());
-            }
         }
     }
 

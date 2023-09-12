@@ -84,6 +84,7 @@ public class MagicBook : MonoBehaviour
     {
         if (collision.tag == "Weapon")
         {
+            cur_health -= Player.instance.damage;
             StartCoroutine(OnDamage(Player.instance.damage));
         }
     }
