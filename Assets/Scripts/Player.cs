@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     bool isJump;
     bool isDoubleJump;
     bool isDash;
+    bool isBorder;
     public bool isDamage;
 
     public AudioManager am;
@@ -73,8 +74,8 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-
         Move();
+        StopToWall();
     }
 
     void GetInput()
@@ -90,7 +91,9 @@ public class Player : MonoBehaviour
     void Move()
     {
         //Move Speed
-        rigid.velocity = new Vector2(hAxis * defaultSpeed, rigid.velocity.y);
+        if(!isBorder)
+            rigid.velocity = new Vector2(hAxis * defaultSpeed, rigid.velocity.y);
+
         if (hAxis!=0 && !isJump)
             am.PlaySFX("Run");
         anim.SetBool("isWalking", hDown);
@@ -229,5 +232,11 @@ public class Player : MonoBehaviour
 
         isDamage = false;
         mesh.material.color = Color.white;
+    }
+
+    void StopToWall()
+    {
+        Debug.DrawRay(transform.position, transform.right * 1, Color.green);
+        isBorder = Physics.Raycast(transform.position, transform.right, 1, LayerMask.GetMask("Wall"));
     }
 }
