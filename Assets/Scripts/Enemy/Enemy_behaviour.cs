@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Enemy_behaviour : MonoBehaviour
 {
@@ -108,11 +109,18 @@ public class Enemy_behaviour : MonoBehaviour
     {
         timer = intTimer; //공격 범위에 들어왔을 때 timer 리셋
         attackMode = true;
-
+        StartCoroutine(AttackSound());
         anim.SetBool("canWalk", false);
         anim.SetBool("Attack", true);
     }
-
+    IEnumerator AttackSound()
+    {
+        AudioManager.instance.PlaySFX("Chalk1");
+        yield return new WaitForSeconds(0.33f);
+        AudioManager.instance.PlaySFX("Chalk1");
+        yield return new WaitForSeconds(0.8f);
+        AudioManager.instance.PlaySFX("Chalk2");
+    }
     void Cooldown()
     {
         timer -= Time.deltaTime;

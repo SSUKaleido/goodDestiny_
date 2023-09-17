@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   remainMonster: 0
   goalObject: {fileID: 5551828704311268994}
+  im: {fileID: 6083647467038478883}
 --- !u!1 &5551828704311268994
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,6 +209,7 @@ MonoBehaviour:
   goal: {fileID: 4804167136532105261}
   fieldItemPreFab: {fileID: 7601248496235268760, guid: 8cd5d23736eecb14ab56ddca771db6fc, type: 3}
   itemCount: 0
+  isNeedless: 0
   pos:
   - {x: 40, y: -2, z: 0}
   - {x: 43, y: -2, z: 0}

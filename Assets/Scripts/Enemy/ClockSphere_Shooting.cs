@@ -5,6 +5,7 @@ using UnityEngine;
 public class ClockSphere_Shooting : MonoBehaviour
 {
     public float bulletSpeed = 10f;
+    public int HIT_DAMAGE;
     private Transform player; // 플레이어를 추적하기 위한 변수
     private bool isMoving = true; // 총알이 움직이는지 여부를 나타내는 변수
     private Vector3 initialDirection; // 초기 방향을 저장할 변수
@@ -34,7 +35,18 @@ public class ClockSphere_Shooting : MonoBehaviour
             }
         }
     }
-
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            GameManager.instance.TakeDamage(HIT_DAMAGE);
+            Destroy(gameObject);
+        }
+        else if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Wall")
+        {
+            DestroyBullet();
+        }
+    }
     void DestroyBullet()
     {
         // 총알 파괴

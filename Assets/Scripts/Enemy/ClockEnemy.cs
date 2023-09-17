@@ -13,11 +13,11 @@ public class Cloud_Shooting : MonoBehaviour
 
     private float timer = 0f;
     private bool isMovingRight = true;
-
+    AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -30,6 +30,7 @@ public class Cloud_Shooting : MonoBehaviour
         if (distanceToPlayer <= shootingRange && timer >= shootingInterval)
         {
             Shoot();
+            audioSource.Play();
             timer = 0f;
         }
 

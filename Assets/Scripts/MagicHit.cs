@@ -12,7 +12,7 @@ public class MagicHit : MonoBehaviour
             GameManager.instance.TakeDamage(HIT_DAMAGE);
             Destroy(gameObject);
         }
-        else if (other.gameObject.tag == "Ground")
+        else if (other.gameObject.tag == "Ground" || other.gameObject.tag=="Wall")
         {
             StartCoroutine(DestroyBullet());
         }

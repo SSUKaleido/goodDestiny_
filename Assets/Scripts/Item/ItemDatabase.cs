@@ -34,5 +34,18 @@ public class ItemDatabase : MonoBehaviour
 
     };
     #endregion
+
+    private void Update()
+    {
+        if (isItemGet)
+        {
+            StartCoroutine(SetBool());
+        }
+    }
+    IEnumerator SetBool()
+    {
+        yield return new WaitForSeconds(0.1f);
+        isItemGet = false;
+    }
     
 }

@@ -5402,11 +5402,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e43d0a457e8dcd44bc64295faf9dcce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 30000
+  maxHealth: 300
   curHealth: 0
-  money: 100000
+  money: 10000
   isDead: 0
   sprite: {fileID: 6423190662883629974}
+  rm: {fileID: 0}
 --- !u!1 &5644564327464021281
 GameObject:
   m_ObjectHideFlags: 0

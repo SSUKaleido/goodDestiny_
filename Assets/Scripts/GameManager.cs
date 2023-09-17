@@ -55,8 +55,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-            StartCoroutine(NextStage());
         MenuSet();
         if (!isGameOver)
             stopWatch += Time.deltaTime;
@@ -196,17 +194,28 @@ public class GameManager : MonoBehaviour
     public void TakeDamage(float damage)
     {
         Player.instance.isDamage = true;
-
+        StartCoroutine(OnDamage());
+        cur_health -= damage;
         Debug.Log("player: 데미지를 입었다!");
         if (cur_health > 0)
         {
             am.PlaySFX("Hit");
-            cur_health -= damage;
         }
         else
+        {
             StartCoroutine(PlayerDead());
+            Player.instance.anim.SetTrigger("doDie");
+        }
     }
+    IEnumerator OnDamage()
+    {
+        Player.instance.isDamage = true;
+        Player.instance.mesh.material.color = Color.red;
+        yield return new WaitForSeconds(1f);
 
+        Player.instance.isDamage = false;
+        Player.instance.mesh.material.color = Color.white;
+    }
 
     IEnumerator PlayerDead()
     {

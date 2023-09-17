@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 6934014890091128089}
   m_Layer: 6
   m_Name: BlueBook
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -272,9 +272,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   next_move: 0
   HIT_DAMAGE: 15
-  max_health: 100
-  cur_health: 100
-  dieMoney: 0
+  max_health: 70
+  cur_health: 70
+  dieMoney: 100
   rm: {fileID: 0}
 --- !u!61 &7796259042652312211
 BoxCollider2D:
@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 8448719511142188984}
   m_Layer: 6
   m_Name: BookLay
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class FinishControl : MonoBehaviour
 {
-    AudioSource audioSource;
     public bool isBossroom;
     public bool isPlayer = false;
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        
     }
     private void Update()
     {

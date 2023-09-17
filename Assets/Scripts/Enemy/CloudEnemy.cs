@@ -7,10 +7,13 @@ public class CloudEnemy : MonoBehaviour
 {
     public GameObject bullet;
     public GameObject bulletSpawnPrefab; // 위치 프리팹
+    public float max_health;
+    public float cur_health;
+    SpriteRenderer spriteRenderer;
     public Transform[] spawnPositions;
     public GameObject spherePrefab;
+    public RemainMonster rm;
     public float detectionRange = 10f; // 플레이어를 감지할 범위를 설정합니다.
-
     private bool hasSpawned = false;
     private float timer;
     private int bulletsShot = 0;
@@ -21,6 +24,7 @@ public class CloudEnemy : MonoBehaviour
 
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         InvokeRepeating("StartThinking", 1f, 15f);
     }
 
@@ -80,7 +84,37 @@ public class CloudEnemy : MonoBehaviour
         }
         yield return new WaitForSeconds(2f);
     }
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Weapon")
+        {
+            cur_health -= Player.instance.damage;
+            StartCoroutine(OnDamage(Player.instance.damage));
+        }
+    }
+    IEnumerator OnDamage(float damage)
+    {
+        spriteRenderer.color = Color.red;
+        AudioManager.instance.PlaySFX("Attack");
+        cur_health -= damage;
+        yield return new WaitForSeconds(0.1f);
+        if (cur_health > 0)
+        {
+            spriteRenderer.color = Color.white;
+        }
+        else
+        {
+            spriteRenderer.color = Color.gray;
+            yield return new WaitForSeconds(0.2f);
+            Die();
+        }
+    }
+    void Die()
+    {
+        Destroy(gameObject);
+        GameManager.instance.roundMoney += 100;
+        rm.MonsterDied();
+    }
     void Shoot(Vector3 shootPosition)
     {
         Instantiate(bullet, shootPosition, Quaternion.identity);

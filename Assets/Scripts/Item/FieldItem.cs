@@ -32,7 +32,7 @@ public class FieldItem : MonoBehaviour
         {
             GetItem();
         }
-        if (ItemDatabase.instance.isItemGet == true)
+        if (ItemDatabase.instance.isItemGet)
         {
             DestroyItem();
         }

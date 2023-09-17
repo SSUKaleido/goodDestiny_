@@ -5,6 +5,7 @@ using UnityEngine;
 using static UnityEditor.Progress;
 using UnityEngine.XR;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : MonoBehaviour
 {
@@ -37,8 +38,8 @@ public class Player : MonoBehaviour
 
     public AudioManager am;
     Rigidbody2D rigid;
-    Animator anim;
-    SpriteRenderer mesh;
+    public Animator anim;
+    public SpriteRenderer mesh;
 
     public int atkNum = 0;
     float swordCurTime;
@@ -80,12 +81,12 @@ public class Player : MonoBehaviour
 
     void GetInput()
     { //대화 실행 중 이동 불가 설정
-        hAxis = StoryManager.instance.isStory ? 0 : Input.GetAxisRaw("Horizontal");
-        hDown = StoryManager.instance.isStory ? false : Input.GetButton("Horizontal");
-        jDown = StoryManager.instance.isStory ? false : Input.GetButtonDown("Jump");
-        zDown = StoryManager.instance.isStory ? false : Input.GetKeyDown(KeyCode.Z);
-        xDown = StoryManager.instance.isStory ? false : Input.GetKeyDown(KeyCode.X);
-        cDown = StoryManager.instance.isStory ? false : Input.GetKeyDown(KeyCode.C);
+        hAxis = StoryManager.instance.isStory || manager.isGameOver ? 0 : Input.GetAxisRaw("Horizontal");
+        hDown = StoryManager.instance.isStory || manager.isGameOver ? false : Input.GetButton("Horizontal");
+        jDown = StoryManager.instance.isStory || manager.isGameOver ? false : Input.GetButtonDown("Jump");
+        zDown = StoryManager.instance.isStory || manager.isGameOver ? false : Input.GetKeyDown(KeyCode.Z);
+        xDown = StoryManager.instance.isStory || manager.isGameOver ? false : Input.GetKeyDown(KeyCode.X);
+        cDown = StoryManager.instance.isStory || manager.isGameOver ? false : Input.GetKeyDown(KeyCode.C);
     }
 
     void Move()
@@ -222,15 +223,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator OnDamage()
-    {
-        isDamage = true;
-        mesh.material.color = Color.red;
-        yield return new WaitForSeconds(1f);
-
-        isDamage = false;
-        mesh.material.color = Color.white;
-    }
+    
 
     void StopToWall()
     {

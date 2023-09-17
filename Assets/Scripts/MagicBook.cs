@@ -76,7 +76,7 @@ public class MagicBook : MonoBehaviour
 
         if (ray_right.collider != null || ray_left.collider != null)
         {
-            StartCoroutine(YMove());
+            YMove();
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -86,6 +86,7 @@ public class MagicBook : MonoBehaviour
             cur_health -= Player.instance.damage;
             StartCoroutine(OnDamage(Player.instance.damage));
         }
+        
     }
     IEnumerator OnDamage(float damage)
     {
@@ -154,12 +155,9 @@ public class MagicBook : MonoBehaviour
         yield return new WaitForSeconds(ATTACK_COOL);
         isCoolDown = false;
     }
-    IEnumerator YMove()
+    void YMove()
     {
         next_move = -(next_move);
-        rigid.velocity = new Vector2(next_move, 2);
-        yield return new WaitForSeconds(1);
-        rigid.velocity = new Vector2(next_move, 0);
     }
     
     void DecideMove()

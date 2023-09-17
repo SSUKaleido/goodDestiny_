@@ -8,7 +8,7 @@ public class CoolEft : ItemEffect
     public float coolPoint;
     public override bool ExecuteRole()
     {
-        //player.skillCool *= coolPoint;
+        Player.instance.bulletCoolTime *= coolPoint;
         return true;
     }
 }

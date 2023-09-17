@@ -62,6 +62,13 @@ public class PhysicBookMoves : MonoBehaviour
         }
         RayUse();
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Wall")
+        {
+            next_move = -next_move;
+        }
+    }
     void RayUse()
     {
         Debug.DrawRay(rigid.position, Vector3.right, new Color(0, 1, 0));

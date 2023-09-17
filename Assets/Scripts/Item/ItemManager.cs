@@ -12,7 +12,11 @@ public class ItemManager : MonoBehaviour
     bool isNeedless;
     public Vector3[] pos;
     List<Item> itemDB; 
-    void Start()
+    void Awake()
+    {
+        
+    }
+    public void GenerateItem()
     {
         if (!isNeedless)
         {
@@ -20,12 +24,8 @@ public class ItemManager : MonoBehaviour
             for (int i = 0; i < 3; i++)
             {
                 GameObject go = Instantiate(fieldItemPreFab, pos[i], Quaternion.identity, goal);
-                go.GetComponent<FieldItem>().SetItem(itemDB[Random.Range(0, 14)]);
+                go.GetComponent<FieldItem>().SetItem(itemDB[Random.Range(0, 12)]);
             }
         }
-    }
-    void Update()
-    {
-        
     }
 }

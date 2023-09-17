@@ -379,11 +379,13 @@ MonoBehaviour:
   attackDistance: 2
   moveSpeed: 2
   damage: 5
+  slashDamage: 10
   timer: 2
   leftLimit: {fileID: 3468937989311846611}
   rightLimit: {fileID: 526030058167112841}
   target: {fileID: 0}
   inRange: 0
+  phase2: 0
   hitBox: {fileID: 3546422200870554614}
   hotZone: {fileID: 8506369718178237958}
   triggerArea: {fileID: 7320357294949437702}
@@ -475,6 +477,7 @@ MonoBehaviour:
   money: 1000
   isDead: 0
   sprite: {fileID: 4037168301514893243}
+  rm: {fileID: 0}
 --- !u!1 &7320357294949437702
 GameObject:
   m_ObjectHideFlags: 0

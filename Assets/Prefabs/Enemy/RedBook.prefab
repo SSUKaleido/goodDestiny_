@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 1677977895664949808}
   m_Layer: 6
   m_Name: RedBook
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -376,8 +376,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ee35c28ff1de842a36e469289fe64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_health: 100
-  cur_health: 100
+  max_health: 70
+  cur_health: 70
   next_move: 0
   rm: {fileID: 0}
   bullet: {fileID: 478496787848738346, guid: 95d555482eb9da64bb2eef8467bbf2fc, type: 3}

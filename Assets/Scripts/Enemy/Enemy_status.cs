@@ -12,7 +12,7 @@ public class Enemy_status : MonoBehaviour
 
     public SpriteRenderer sprite;
     private Animator anim;
-
+    public RemainMonster rm;
     private void Awake()
     {
         curHealth = maxHealth;
@@ -37,6 +37,7 @@ public class Enemy_status : MonoBehaviour
     {
         if (curHealth > 0)
         {
+            AudioManager.instance.PlaySFX("Attack");
             yield return new WaitForSeconds(0.01f);
             sprite.material.color = Color.red;
 
@@ -54,7 +55,7 @@ public class Enemy_status : MonoBehaviour
             isDead = true;
 
             GameManager.instance.GetMoney(money);
-
+            rm.MonsterDied();
             Destroy(gameObject, 3);
         }
     }
