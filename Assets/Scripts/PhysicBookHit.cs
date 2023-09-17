@@ -23,7 +23,6 @@ public class PhysicBookHit : MonoBehaviour
     SpriteRenderer spriteRenderer;
     GameObject effect;
     Animator anim_effect;
-    public Transform player;
 
 
     void Awake()
@@ -41,7 +40,7 @@ public class PhysicBookHit : MonoBehaviour
 
     void FixedUpdate()
     {
-        distance = Vector2.Distance(player.position, transform.position);
+        distance = Vector2.Distance(Player.instance.transform.position, transform.position);
         if (distance <= ATTACK_RANGE)
         {
             if (!isAttacking && !isCoolDown)
@@ -56,7 +55,7 @@ public class PhysicBookHit : MonoBehaviour
             else if (!isAttacking)
             {
                 anim.SetBool("IsPlayerInRange", false);
-                if (player.position.x > transform.position.x)
+                if (Player.instance.transform.position.x > transform.position.x)
                 {
                     transform.localScale = new Vector3(0.5f, 0.5f, 1);
                 }
@@ -74,7 +73,7 @@ public class PhysicBookHit : MonoBehaviour
         next_move = 0;
         isAttacking = true;
         anim.SetBool("IsPlayerInRange", true);
-        if (player.position.x < transform.position.x)
+        if (Player.instance.transform.position.x < transform.position.x)
         {
             transform.localScale = new Vector3(-0.5f, 0.5f, 1);
             anim.SetTrigger("Left");
@@ -101,7 +100,7 @@ public class PhysicBookHit : MonoBehaviour
 
     IEnumerator Cooldown()
     {
-        if (player.position.x > transform.position.x)
+        if (Player.instance.transform.position.x > transform.position.x)
         {
             transform.localScale = new Vector3(0.5f, 0.5f, 1);
         }

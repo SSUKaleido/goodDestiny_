@@ -4728,6 +4728,7 @@ MonoBehaviour:
   attackDistance: 2
   moveSpeed: 8
   damage: 30
+  slashDamage: 10
   timer: 2
   leftLimit: {fileID: 386795796}
   rightLimit: {fileID: 1183614549}
@@ -4736,6 +4737,9 @@ MonoBehaviour:
   hitBox: {fileID: 1055597704}
   hotZone: {fileID: 795820713}
   triggerArea: {fileID: 485994340}
+  particle: {fileID: 0}
+  bullet: {fileID: 0}
+  ranAction: 0
 --- !u!95 &768118077
 Animator:
   serializedVersion: 5
@@ -4797,6 +4801,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 3414360261434568313, guid: 6476a14fb35ce5549ac8a8d6bdcbdc52, type: 3}
+  diagonalbullet: {fileID: 3414360261434568313, guid: 97a68415e1abf7243b3f57fa8c0f9d6a, type: 3}
   bulletPos: {fileID: 140079915}
 --- !u!1 &788702145
 GameObject:
@@ -5330,6 +5335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa91501c264e0354394d5162d45e77fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackType: 0
 --- !u!61 &1055597707
 BoxCollider2D:
   m_ObjectHideFlags: 0

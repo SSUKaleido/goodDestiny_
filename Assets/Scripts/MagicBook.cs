@@ -22,7 +22,6 @@ public class MagicBook : MonoBehaviour
     SpriteRenderer spriteRenderer;
     GameObject magic_circle;
     Animator anim_magic;
-    public Transform player;
     public GameObject bullet;
     
     void Awake()
@@ -38,7 +37,7 @@ public class MagicBook : MonoBehaviour
 
     void FixedUpdate()
     {
-        distance = Vector2.Distance(player.position, transform.position);
+        distance = Vector2.Distance(Player.instance.transform.position, transform.position);
         rigid.velocity = new Vector2(next_move, rigid.velocity.y);
         if (distance <= ATTACK_RANGE)
         {
@@ -54,7 +53,7 @@ public class MagicBook : MonoBehaviour
             else if (!isAttacking)
             {
                 anim.SetBool("IsPlayerInRange", false);
-                if (player.position.x > transform.position.x)
+                if (Player.instance.transform.position.x > transform.position.x)
                 {
                     next_move = 1;
                     transform.localScale = new Vector3(0.5f, 0.5f,1);
@@ -113,7 +112,7 @@ public class MagicBook : MonoBehaviour
         isAttacking = true;
         anim.SetBool("IsPlayerInRange", true);
         magic_circle.SetActive(true);
-        if (player.position.x < transform.position.x)
+        if (Player.instance.transform.position.x < transform.position.x)
         {
             transform.localScale = new Vector3(-0.5f, 0.5f, 1);
         }
@@ -127,7 +126,7 @@ public class MagicBook : MonoBehaviour
         GameObject alphabet = Instantiate(bullet,transform.position,transform.rotation);
         Rigidbody2D alp_rigid = alphabet.GetComponent<Rigidbody2D>();
         audioSource.Play();
-        alp_rigid.velocity=(player.position - transform.position).normalized*8f;
+        alp_rigid.velocity=(Player.instance.transform.position - transform.position).normalized*8f;
         yield return new WaitForSeconds(0.833f);
 
         // 공격 애니메이션이 끝난 후, 쿨타임 동안 대기
@@ -138,7 +137,7 @@ public class MagicBook : MonoBehaviour
 
     IEnumerator Cooldown()
     {
-        if (player.position.x > transform.position.x)
+        if (Player.instance.transform.position.x > transform.position.x)
         {
             next_move = 1;
             transform.localScale = new Vector3(0.5f, 0.5f, 1);

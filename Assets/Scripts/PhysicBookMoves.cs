@@ -17,7 +17,6 @@ public class PhysicBookMoves : MonoBehaviour
     bool isAttacking;
     bool isCoolDown;
     
-    public Transform player;
     void Awake()
     {
         book_anim = GetComponentInChildren<Animator>();
@@ -27,7 +26,7 @@ public class PhysicBookMoves : MonoBehaviour
 
     void FixedUpdate()
     {
-        distance = Vector2.Distance(player.position, transform.position);
+        distance = Vector2.Distance(Player.instance.transform.position, transform.position);
         rigid.velocity = new Vector2(next_move, rigid.velocity.y);
         if (distance <= ATTACK_RANGE)
         {
@@ -40,7 +39,7 @@ public class PhysicBookMoves : MonoBehaviour
             }
             else if (!isAttacking)
             {
-                if (player.position.x > transform.position.x)
+                if (Player.instance.transform.position.x > transform.position.x)
                 {
                     next_move = 1;
                 }
@@ -52,7 +51,7 @@ public class PhysicBookMoves : MonoBehaviour
         }
         else 
         {
-            if (player.position.x > transform.position.x)
+            if (Player.instance.transform.position.x > transform.position.x)
             {
                 next_move = 1;
             }
@@ -84,7 +83,7 @@ public class PhysicBookMoves : MonoBehaviour
     }
     IEnumerator Cooldown()
     {
-        if (player.position.x > transform.position.x)
+        if (Player.instance.transform.position.x > transform.position.x)
         {
             next_move = 1;
         }

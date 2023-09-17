@@ -6,7 +6,6 @@ public class Cloud_Shooting : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public Transform bulletSpawnPoint;
-    public Transform player;
     public float shootingRange = 5f;
     public float patrolDistance = 5f;
     public float shootingInterval = 2f; // 발사 간격을 3초로 설정
@@ -25,7 +24,7 @@ public class Cloud_Shooting : MonoBehaviour
     void Update()
     {
         // 플레이어와 적 캐릭터 간의 거리 계산
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, Player.instance.transform.position);
 
         // 플레이어가 일정 범위 안에 있고 발사 쿨다운 타이머가 지났을 때 발사
         if (distanceToPlayer <= shootingRange && timer >= shootingInterval)

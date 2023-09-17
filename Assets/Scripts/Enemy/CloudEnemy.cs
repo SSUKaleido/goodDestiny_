@@ -9,7 +9,6 @@ public class CloudEnemy : MonoBehaviour
     public GameObject bulletSpawnPrefab; // 위치 프리팹
     public Transform[] spawnPositions;
     public GameObject spherePrefab;
-    public Transform player; // 플레이어의 Transform을 할당합니다.
     public float detectionRange = 10f; // 플레이어를 감지할 범위를 설정합니다.
 
     private bool hasSpawned = false;
@@ -28,7 +27,7 @@ public class CloudEnemy : MonoBehaviour
     void StartThinking()
     {
         // 플레이어와의 거리를 계산하여 공격 여부를 결정합니다.
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, Player.instance.transform.position);
 
         if (distanceToPlayer <= detectionRange)
         {

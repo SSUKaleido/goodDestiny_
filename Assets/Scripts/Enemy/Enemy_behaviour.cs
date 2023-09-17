@@ -17,6 +17,7 @@ public class Enemy_behaviour : MonoBehaviour
     public Transform rightLimit;
     [HideInInspector] public Transform target;
     [HideInInspector] public bool inRange; //범위 안에 플레이어가 들어왔는지 확인
+    public bool phase2;
     public GameObject hitBox;
     public GameObject hotZone;
     public GameObject triggerArea;
@@ -31,7 +32,6 @@ public class Enemy_behaviour : MonoBehaviour
     private float distance; //플레이어와의 거리
     private bool attackMode;
     private bool cooling; //공격 쿨타임 중인지 확인
-    private bool phase2;
     private bool skill_canRange = true;
     private bool skill_canTeleport = true;
     private float intTimer;

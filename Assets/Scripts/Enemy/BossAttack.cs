@@ -10,7 +10,8 @@ public class BossAttack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("MonsterAttack", 0f, 3f);
+        if(GetComponent<Enemy_behaviour>().phase2 == true)
+            InvokeRepeating("MonsterAttack", 0f, 20f);
     }
     void MonsterAttack()
     {
