@@ -70,6 +70,13 @@ public class Player : MonoBehaviour
         Dash();
         Attack();
         BulletFire();
+
+        if (isDamage) {
+            mesh.material.color = Color.red;
+            Invoke("OutOnDamage", 1f);
+        }
+        else if (manager.cur_health < 0)
+            anim.SetTrigger("doDie");
     }
 
     void FixedUpdate()
@@ -224,12 +231,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator OnDamage()
+    void OutOnDamage()
     {
-        isDamage = true;
-        mesh.material.color = Color.red;
-        yield return new WaitForSeconds(1f);
-
         isDamage = false;
         mesh.material.color = Color.white;
     }

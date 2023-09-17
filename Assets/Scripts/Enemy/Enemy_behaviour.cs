@@ -8,9 +8,10 @@ public class Enemy_behaviour : MonoBehaviour
     #region Public Variables
     public enum Type { Nomal, Boss };
     public Type enemyType;
-    public float attackDistance; //공격 최소 거리
+    public float attackDistance = 2f; //공격 최소 거리
     public float moveSpeed;
     public float damage;
+    public float slashDamage = 10f;
     public float timer; //공격 쿨타임 타이머
     public Transform leftLimit;
     public Transform rightLimit;
@@ -19,6 +20,9 @@ public class Enemy_behaviour : MonoBehaviour
     public GameObject hitBox;
     public GameObject hotZone;
     public GameObject triggerArea;
+    public GameObject particle;
+    public GameObject bullet;
+    public int ranAction;
     #endregion
 
     #region Private Variables
@@ -27,7 +31,11 @@ public class Enemy_behaviour : MonoBehaviour
     private float distance; //플레이어와의 거리
     private bool attackMode;
     private bool cooling; //공격 쿨타임 중인지 확인
+    private bool phase2;
+    private bool skill_canRange = true;
+    private bool skill_canTeleport = true;
     private float intTimer;
+    private float atkNum = 0f;
     #endregion
 
     void Awake()
@@ -48,6 +56,15 @@ public class Enemy_behaviour : MonoBehaviour
 
         if (inRange && !status.isDead)
             EnemyLogic();
+
+        //Boss 2phase
+        if (enemyType == Type.Boss && status.curHealth < status.maxHealth / 2f)
+        {
+            phase2 = true;
+            particle.SetActive(true);
+            moveSpeed = 7f;
+        }
+            
     }
 
     void EnemyLogic()
@@ -64,7 +81,7 @@ public class Enemy_behaviour : MonoBehaviour
                 Attack();
             else if (enemyType == Type.Boss)
             {
-                BossAttack();
+                BossAtk();
             }
         }
 
@@ -165,10 +182,55 @@ public class Enemy_behaviour : MonoBehaviour
         transform.eulerAngles = rotation;
     }
 
-    void BossAttack()
+    void BossAtk()
     {
         timer = intTimer; //공격 범위에 들어왔을 때 timer 리셋
         attackMode = true;
+
+
+        if (skill_canTeleport == true)
+            BossTeleportAtk();
+
+        if (phase2 && cooling == false && skill_canRange)
+            attackDistance = 6f;
+
+
+        anim.SetBool("canWalk", false);
+        anim.SetFloat("Blend", atkNum);
+        anim.SetBool("Attack", true);
+
+        atkNum = 0f;
+    }
+
+    void BossSlash()
+    {
+        if (!phase2)
+            return;
+
+        GameObject instantBulletA = Instantiate(bullet, transform.position, transform.rotation);
+        Rigidbody2D rigidBulletA = instantBulletA.GetComponent<Rigidbody2D>();
+        rigidBulletA.velocity = transform.right * 20;
+    }
+
+    void BossTeleportAtk()
+    {
+        cooling = true;
+        skill_canTeleport = false;
+        Invoke("TeleportCooltime", 40f);
+
+        transform.position = target.position;
+        atkNum = 1f;
+        BossAtk();
+    }
+
+    void RangeCooltime()
+    {
+        skill_canRange = true;
+    }
+
+    void TeleportCooltime()
+    {
+        skill_canTeleport = true;
     }
 }
 

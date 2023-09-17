@@ -160,6 +160,7 @@ GameObject:
   - component: {fileID: 717046769975530399}
   - component: {fileID: 8137144451462558358}
   - component: {fileID: 4856009238532619510}
+  - component: {fileID: 8117163371671406691}
   m_Layer: 10
   m_Name: hitBox
   m_TagString: EnemyBullet
@@ -262,6 +263,19 @@ CircleCollider2D:
   m_Offset: {x: 0.81715333, y: 0.31571865}
   serializedVersion: 2
   m_Radius: 0.14713848
+--- !u!114 &8117163371671406691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3546422200870554614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa91501c264e0354394d5162d45e77fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackType: 0
 --- !u!1 &3851472697866952894
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,6 +387,9 @@ MonoBehaviour:
   hitBox: {fileID: 3546422200870554614}
   hotZone: {fileID: 8506369718178237958}
   triggerArea: {fileID: 7320357294949437702}
+  particle: {fileID: 0}
+  bullet: {fileID: 0}
+  ranAction: 0
 --- !u!1 &6682801888288082062
 GameObject:
   m_ObjectHideFlags: 0
