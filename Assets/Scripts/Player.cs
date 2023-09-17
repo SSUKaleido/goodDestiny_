@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public GameManager manager;
     public Camera followCamera;
 
-    public float damage = 10;   //    ,    타               (   타         5   커                         腑   )
+    public float damage = 10;   //근접, 원거리 공격 모두 포함(원거리 공격은 5초후에 사라지기 때문에 다중 공격가능)
     public float speed = 8;
     public float dashSpeed = 30;
     float defaultSpeed;
@@ -70,13 +70,6 @@ public class Player : MonoBehaviour
         Dash();
         Attack();
         BulletFire();
-
-        if (isDamage) {
-            mesh.material.color = Color.red;
-            Invoke("OutOnDamage", 1f);
-        }
-        else if (manager.cur_health < 0)
-            anim.SetTrigger("doDie");
     }
 
     void FixedUpdate()
@@ -86,7 +79,7 @@ public class Player : MonoBehaviour
     }
 
     void GetInput()
-    { //  화          絹   柰      
+    { //대화 실행 중 이동 불가 설정
         hAxis = StoryManager.instance.isStory ? 0 : Input.GetAxisRaw("Horizontal");
         hDown = StoryManager.instance.isStory ? false : Input.GetButton("Horizontal");
         jDown = StoryManager.instance.isStory ? false : Input.GetButtonDown("Jump");
@@ -111,7 +104,7 @@ public class Player : MonoBehaviour
             anim.SetBool("isWalking", false);
         }
 
-        //Direction Sprite(       환)
+        //Direction Sprite(방향 전환)
         if (hAxis == -1)
             transform.rotation = Quaternion.Euler(0,180,0);
         else if(hAxis == 1)
@@ -198,7 +191,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    // 獵玖  抉       求   傷      풔   獨 (    티           )
+    //애니메이션 공격하는 중에 실행되는 함수(유니티내에서 편집)
     void SwordRangeEnabled()
     {
         swordRange.SetActive(true);
@@ -213,16 +206,14 @@ public class Player : MonoBehaviour
         anim.SetFloat("Blend", atkNum);
         anim.SetTrigger("atk");
     }
-    /*
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(swordRange.transform.position, boxSize);
     }
-    */
     void OnCollisionEnter2D(Collision2D collision)
     {
-        //        : 천 恙�  琯  캔  ground     館  > tile        혹   ray           체?
+        //버그있음: 천장에 부딪쳐도 ground라고 인식 > tile맵 변경 혹은 ray 사용으로 대체?
         if (collision.gameObject.tag == "Ground") {
             anim.SetBool("isJumping", false);
             isJump = false;
@@ -231,8 +222,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OutOnDamage()
+    IEnumerator OnDamage()
     {
+        isDamage = true;
+        mesh.material.color = Color.red;
+        yield return new WaitForSeconds(1f);
+
         isDamage = false;
         mesh.material.color = Color.white;
     }
